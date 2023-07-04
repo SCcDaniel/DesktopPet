@@ -1,8 +1,8 @@
 using UnityEngine;
 using System;
 using System.Drawing;
-
 #if UNITY_STANDALONE_WIN
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using WindowTray;
 #endif
@@ -14,6 +14,8 @@ public class S_TransparentWindow : MonoBehaviour
     public int WindowHeight = 512;
     public float Opacity = 1.0f;
     public string TrayIconPath;
+    public float CameraViewSize = 5.0f;
+    private Camera CameraComp = null;
     //导入Win32 api
 #if UNITY_STANDALONE_WIN
     [DllImport("user32")]
@@ -46,6 +48,7 @@ public class S_TransparentWindow : MonoBehaviour
     private const int WS_EX_TRANSPARENT= 0x00000020;
     private const int WS_EX_LAYERED = 0x00080000;//完全穿透模式
     private const int WS_EX_TOOLWINDOW = 0x00000080;
+    private const int WS_EX_NOREDIRECTIONBITMAP = 0x00200000;
     //
     private const int SWP_SHOWWINDOW = 0x0040;
     //托盘
@@ -64,7 +67,7 @@ public class S_TransparentWindow : MonoBehaviour
         int windowStyle = GetWindowLong(hwnd,-16);
         int windowStyleEx = GetWindowLong(hwnd,-20);
         SetWindowLong(hwnd,-16, windowStyle & ~WS_BORDER & ~WS_CAPTION);
-        SetWindowLong(hwnd,-20, windowStyleEx | WS_EX_LAYERED | WS_EX_TOOLWINDOW);
+        SetWindowLong(hwnd,-20, windowStyleEx | WS_EX_LAYERED | WS_EX_TOOLWINDOW | WS_EX_NOREDIRECTIONBITMAP);
         SetWindowPos(hwnd, -1, 0, 0, WindowWidth, WindowHeight, SWP_SHOWWINDOW);
         SetLayeredWindowAttributes(hwnd, 0, (int)(Opacity*255.0f), 0x1 | 0x2);
         //任务栏右下角托盘小图标
@@ -78,9 +81,14 @@ public class S_TransparentWindow : MonoBehaviour
 
     void Awake()
     {
+        CameraComp = Camera.main;
 #if !UNITY_EDITOR
         InitWindowStyle();
 #endif
     }
 
+    void Update()
+    {
+        CameraComp.orthographicSize = CameraViewSize;
+    }
 }

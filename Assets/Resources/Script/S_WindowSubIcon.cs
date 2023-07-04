@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Unity.VisualScripting;
+using Application = System.Windows.Forms.Application;
 
 namespace WindowTray
 {
@@ -16,9 +17,12 @@ namespace WindowTray
         private int iconSize = 40;
         //做托盘图标的图片，这里用了.png格式
         private IntPtr hwnd;
-
+        //
         private MenuItem exit;
-
+        private MenuItem setting;
+        //
+        private Form settingForm;
+        
         //调用该方法将运行程序显示到托盘 
         public void InitTray(ref IntPtr inHwnd , string iconPath)
         {
@@ -34,6 +38,9 @@ namespace WindowTray
             //退出按钮
             exit = new MenuItem("退出", ExitApp);
             _notifyIcon.ContextMenu.MenuItems.Add(exit);
+            //角色大小
+            setting = new MenuItem("设置" , Setting);
+            _notifyIcon.ContextMenu.MenuItems.Add(setting);
             Show();
             _notifyIcon.ShowBalloonTip(2500, "", "你好呀.", ToolTipIcon.None);
             Form.ActiveForm.ShowInTaskbar = false;
@@ -58,13 +65,30 @@ namespace WindowTray
 
         private void ExitApp(object sender, EventArgs e)
         {
+            
             Hide();
             _notifyIcon.Dispose();
             #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
             #else
-            UnityEngine.Application.Quit(0);
+            System.Windows.Forms.Application.Exit();
+            //UnityEngine.Application.Quit(0);
             #endif
+        }
+        
+        private void Setting(object sender, EventArgs e)
+        {
+            settingForm= new Form();
+            Button closeButton = new Button();
+            closeButton.Text = "关闭";
+            closeButton.Parent = settingForm;
+            closeButton.MouseClick += CloseSettingForm;
+            settingForm.ShowDialog();
+        }
+        
+        private void CloseSettingForm(object sender, EventArgs e)
+        {
+            settingForm.Close();
         }
     }
 }
