@@ -1,0 +1,28 @@
+{
+	"Version": 3,
+	"FileReferences": {
+		"Moc": "sjiang.moc3",
+		"Textures": [
+			"sjiang.4096/texture_00.png",
+			"sjiang.4096/texture_01.png",
+			"sjiang.4096/texture_02.png"
+		],
+		"Physics": "sjiang.physics3.json",
+		"DisplayInfo": "sjiang.cdi3.json"
+	},
+	"Groups": [
+		{
+			"Target": "Parameter",
+			"Name": "LipSync",
+			"Ids": []
+		},
+		{
+			"Target": "Parameter",
+			"Name": "EyeBlink",
+			"Ids": [
+				"ParamEyeLOpen",
+				"ParamEyeROpen"
+			]
+		}
+	]
+}
