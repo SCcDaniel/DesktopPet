@@ -44,7 +44,7 @@ namespace WindowTray
                 _notifyIcon.ContextMenu.MenuItems.Add(exit);
             }
             Show();
-            _notifyIcon.ShowBalloonTip(2500, "", "你好呀.", ToolTipIcon.None);
+            _notifyIcon.ShowBalloonTip(2500, "", "你好呀~", ToolTipIcon.None);
             Form.ActiveForm.ShowInTaskbar = false;
             //Form.FromHandle(hwnd).FindForm().ShowInTaskbar=false;
         }

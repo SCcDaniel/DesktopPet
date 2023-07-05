@@ -45,10 +45,13 @@ public class S_CharacterController : MonoBehaviour
         }
     }
 
-    public void UpdateCameraSize(float value)
+    public void UpdateCharacterSize(float value)
     {
-        if (MainCamera)
-            MainCamera.orthographicSize = 1 / value;
+        GameObject[] chars = GameObject.FindGameObjectsWithTag("MainCharacter");
+        foreach (var c in chars)
+        {
+            c.transform.localScale = new UnityEngine.Vector3(value,value,value);
+        }
     }
     
 }
