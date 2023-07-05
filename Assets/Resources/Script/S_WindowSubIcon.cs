@@ -33,12 +33,16 @@ namespace WindowTray
                 _notifyIcon.Icon = CustomTrayIcon(iconPath, iconSize, iconSize);
             _notifyIcon.ShowBalloonTip(2000);//托盘气泡显示时间
             _notifyIcon.ContextMenu = new System.Windows.Forms.ContextMenu();
-            //退出按钮
-            exit = new MenuItem("退出", ExitApp);
-            _notifyIcon.ContextMenu.MenuItems.Add(exit);
-            //角色大小
-            setting = new MenuItem("设置" , Setting);
-            _notifyIcon.ContextMenu.MenuItems.Add(setting);
+            //右键菜单
+            {
+                //退出按钮
+                exit = new MenuItem("退出", ExitApp);
+                //角色大小
+                setting = new MenuItem("设置" , Setting);
+                //
+                _notifyIcon.ContextMenu.MenuItems.Add(setting);
+                _notifyIcon.ContextMenu.MenuItems.Add(exit);
+            }
             Show();
             _notifyIcon.ShowBalloonTip(2500, "", "你好呀.", ToolTipIcon.None);
             Form.ActiveForm.ShowInTaskbar = false;

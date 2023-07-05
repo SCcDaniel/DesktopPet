@@ -13,7 +13,6 @@ public class S_TransparentWindow : MonoBehaviour
     public int WindowHeight = 512;
     public float Opacity = 1.0f;
     public string TrayIconPath;
-    public float CameraViewSize = 5.0f;
     private Camera CameraComp = null;
     //导入Win32 api
 #if UNITY_STANDALONE_WIN
@@ -93,6 +92,5 @@ public class S_TransparentWindow : MonoBehaviour
 
     void Update()
     {
-        CameraComp.orthographicSize = CameraViewSize;
     }
 }
