@@ -18,10 +18,10 @@ namespace WindowTray
         //做托盘图标的图片，这里用了.png格式
         private IntPtr hwnd;
         //
-        // private MenuItem exit;
-        // private MenuItem setting;
-        //
-        // /*--------Malioc-------*/
+        private MenuItem exit;
+        private MenuItem setting;
+        
+        /*--------Malioc-------*/
         //
         // private MenuItem maliOfflineCompiler;
         // //只显示Spilling
@@ -29,7 +29,7 @@ namespace WindowTray
         // public static  MenuItem MaliocItem_ForUE4;
         // public static  MenuItem MaliocItem_ForOpenGLES;
         // public static  MenuItem MaliocItem_ForVulkanGLSL;
-        // /*---------------------*/
+        /*---------------------*/
 
         private MenuItem AddLine()
         {
@@ -53,10 +53,10 @@ namespace WindowTray
             _notifyIcon.ContextMenu = new System.Windows.Forms.ContextMenu();
             //右键菜单
             {
-                // //退出按钮
-                // exit = new MenuItem("退出", ExitApp);
-                // //角色大小
-                // setting = new MenuItem("设置" , Setting);
+                //退出按钮
+                exit = new MenuItem("退出", ExitApp);
+                //角色大小
+                setting = new MenuItem("设置" , Setting);
                 // //Mali Offline Compiler
                 // {
                 //     MaliocItem_OnlyShowSpilling = new MenuItem("只显示Spillling", (object sender, EventArgs e) =>
@@ -90,10 +90,10 @@ namespace WindowTray
                 //     maliOfflineCompiler.MenuItems.Add(AddLine());
                 // }
                 // //
-                // _notifyIcon.ContextMenu.MenuItems.Add(maliOfflineCompiler);
-                // _notifyIcon.ContextMenu.MenuItems.Add(AddLine());
-                // _notifyIcon.ContextMenu.MenuItems.Add(setting);
-                // _notifyIcon.ContextMenu.MenuItems.Add(exit);
+                //_notifyIcon.ContextMenu.MenuItems.Add(maliOfflineCompiler);
+                //_notifyIcon.ContextMenu.MenuItems.Add(AddLine());
+                _notifyIcon.ContextMenu.MenuItems.Add(setting);
+                _notifyIcon.ContextMenu.MenuItems.Add(exit);
             }
             Show();
             _notifyIcon.ShowBalloonTip(2500, "", "你好呀~", ToolTipIcon.None);
