@@ -30,6 +30,9 @@ public class S_TransparentWindow : MonoBehaviour
 
     [DllImport("user32")]
     private static extern int MessageBox(IntPtr hWnd,string lpText, string lpCaption, uint uType);
+    
+    [DllImport("user32")]
+    private static extern IntPtr GetFocus();
 
     //分层窗口透明度 WS_EX_LAYERED
     //crKey:需要剔除的背景颜色
@@ -83,6 +86,11 @@ public class S_TransparentWindow : MonoBehaviour
     public static void SetWindowAttributes(float newOpacity)
     {
         SetLayeredWindowAttributes(hwnd, 0, (int)(newOpacity*255.0f), 0x00000001 | 0x00000002);
+    }
+
+    public static bool IsUnityFocus()
+    {
+        return GetFocus() == hwnd;
     }
 
 #endif

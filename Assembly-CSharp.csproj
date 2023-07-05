@@ -59,7 +59,6 @@
      <Compile Include="Assets\Live2D\Cubism\Rendering\Masking\ICubismMaskTextureCommandSource.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\Json\CubismJsonParser.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\Json\CubismUserData3Json.cs" />
-     <Compile Include="Assets\Resources\Script\S_SettingWidget.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\Expression\CubismExpressionData.cs" />
      <Compile Include="Assets\Live2D\Cubism\Core\CubismParameter.cs" />
      <Compile Include="Assets\Resources\Script\S_CharacterController.cs" />
@@ -101,6 +100,7 @@
      <Compile Include="Assets\Live2D\Cubism\Framework\Pose\CubismPoseController.cs" />
      <Compile Include="Assets\Resources\Script\S_TransparentWindow.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\Physics\CubismPhysicsNormalization.cs" />
+     <Compile Include="Assets\Unity.VisualScripting.Generated\VisualScripting.Core\AotStubs.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\CubismParameterExtensionMethods.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\CubismParametersInspector.cs" />
      <Compile Include="Assets\Live2D\Cubism\Rendering\CubismSortingModeExtensionMethods.cs" />
@@ -142,9 +142,11 @@
      <Compile Include="Assets\Live2D\Cubism\Framework\CubismEyeBlinkParameter.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\Expression\CubismExpressionController.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\MotionFade\CubismFadeCurveType.cs" />
+     <Compile Include="Assets\Resources\Script\Widgets\S_SettingWidget.cs" />
      <Compile Include="Assets\Live2D\Cubism\Samples\AsyncBenchmark\AsyncToggler.cs" />
      <Compile Include="Assets\Live2D\Cubism\Rendering\Masking\ICubismMaskCommandSource.cs" />
      <Compile Include="Assets\Live2D\Cubism\Rendering\Masking\IntExtensionMethods.cs" />
+     <Compile Include="Assets\Resources\Script\Widgets\S_ContextMenu.cs" />
      <Compile Include="Assets\Live2D\Cubism\Samples\AsyncBenchmark\ModelSpawner.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\CubismUpdateController.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\Expression\CubismExpressionList.cs" />
@@ -203,6 +205,7 @@
      <Folder Include="Assets\Live2D\Cubism\Rendering\Resources" />
      <Folder Include="Assets\TextMesh Pro\Resources\Sprite Assets" />
      <Folder Include="Assets\Live2D\Cubism\Plugins\Experimental" />
+     <Folder Include="Assets\Resources\Character\Materials" />
      <Folder Include="Assets\Live2D\Cubism\Plugins" />
      <Folder Include="Assets\Live2D\Cubism\Plugins\iOS" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
@@ -315,6 +318,7 @@
      <Folder Include="Assets\StreamingAssets\Mali_offine_compiler\Plugins\ShaderCache" />
      <Folder Include="Assets\Live2D\Cubism\Framework\Expression" />
      <Folder Include="Assets\Live2D\Cubism\Rendering\Resources\Live2D\Cubism\Shaders" />
+     <Folder Include="Assets\Resources\Script\Widgets" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF Overlay.shader" />
      <Folder Include="Assets\Live2D\Cubism\Core" />
      <None Include="Assets\Live2D\Cubism\Plugins\RedistributableFiles.txt" />
@@ -324,6 +328,7 @@
      <Folder Include="Assets\TextMesh Pro\Documentation" />
      <None Include="Assets\Resources\Character\sjiang\sjiang.physics3.json" />
      <Folder Include="Assets\Live2D\Cubism\Plugins\Experimental\Emscripten\latest" />
+     <None Include="Assets\Unity.VisualScripting.Generated\VisualScripting.Core\link.xml" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile.shader" />
      <Folder Include="Assets\StreamingAssets\Mali_offine_compiler" />
      <Folder Include="Assets\Live2D\Cubism\Samples\OriginalWorkflow\Motion" />
