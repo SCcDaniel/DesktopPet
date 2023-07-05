@@ -68,6 +68,11 @@ public class S_TransparentWindow : MonoBehaviour
         SetWindowLong(hwnd,-20, windowStyleEx | WS_EX_LAYERED | WS_EX_TOOLWINDOW );
         SetWindowPos(hwnd, -1, 0, 0, WindowWidth, WindowHeight, SWP_SHOWWINDOW);
         SetLayeredWindowAttributes(hwnd, 0, (int)(Opacity*255.0f), 0x00000001 | 0x00000002);
+        CreateTray();
+    }
+
+    public void CreateTray()
+    {
         //任务栏右下角托盘小图标
         Tray = new S_WindowTray();
         string iconPath = Application.streamingAssetsPath + TrayIconPath;
@@ -85,7 +90,8 @@ public class S_TransparentWindow : MonoBehaviour
     void Awake()
     {
         CameraComp = Camera.main;
-#if !UNITY_EDITOR
+#if UNITY_EDITOR
+#else
         InitWindowStyle();
 #endif
     }
