@@ -8,8 +8,7 @@ using WindowTray;
 #endif
 
 public class S_TransparentWindow : MonoBehaviour
-{   
-    
+{
     public int WindowWidth = 512;
     public int WindowHeight = 512;
     public float Opacity = 1.0f;
@@ -39,7 +38,7 @@ public class S_TransparentWindow : MonoBehaviour
     //dwFlags透明方式
     [DllImport("user32.dll")]
     static extern int SetLayeredWindowAttributes(IntPtr hwnd, int crKey, int bAlpha, int dwFlags);
-    private IntPtr hwnd;
+    public static IntPtr hwnd;
 
     //Style
     private const int WS_BORDER = 0x00800000;	//窗口具有细线边框
@@ -67,14 +66,19 @@ public class S_TransparentWindow : MonoBehaviour
         int windowStyle = GetWindowLong(hwnd,-16);
         int windowStyleEx = GetWindowLong(hwnd,-20);
         SetWindowLong(hwnd,-16, windowStyle & ~WS_BORDER & ~WS_CAPTION);
-        SetWindowLong(hwnd,-20, windowStyleEx | WS_EX_LAYERED | WS_EX_TOOLWINDOW | WS_EX_NOREDIRECTIONBITMAP);
+        SetWindowLong(hwnd,-20, windowStyleEx | WS_EX_LAYERED | WS_EX_TOOLWINDOW );
         SetWindowPos(hwnd, -1, 0, 0, WindowWidth, WindowHeight, SWP_SHOWWINDOW);
-        SetLayeredWindowAttributes(hwnd, 0, (int)(Opacity*255.0f), 0x1 | 0x2);
+        SetLayeredWindowAttributes(hwnd, 0, (int)(Opacity*255.0f), 0x00000001 | 0x00000002);
         //任务栏右下角托盘小图标
         Tray = new S_WindowTray();
         string iconPath = Application.streamingAssetsPath + TrayIconPath;
         //Debug.Log(iconPath);
         Tray.InitTray(ref hwnd, iconPath);
+    }
+
+    public static void SetWindowAttributes(float newOpacity)
+    {
+        SetLayeredWindowAttributes(hwnd, 0, (int)(newOpacity*255.0f), 0x00000001 | 0x00000002);
     }
 
 #endif

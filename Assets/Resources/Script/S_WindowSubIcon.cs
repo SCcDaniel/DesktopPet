@@ -20,9 +20,7 @@ namespace WindowTray
         //
         private MenuItem exit;
         private MenuItem setting;
-        //
-        private Form settingForm;
-        
+
         //调用该方法将运行程序显示到托盘 
         public void InitTray(ref IntPtr inHwnd , string iconPath)
         {
@@ -78,18 +76,10 @@ namespace WindowTray
         
         private void Setting(object sender, EventArgs e)
         {
-            settingForm= new Form();
-            Button closeButton = new Button();
-            closeButton.Text = "关闭";
-            closeButton.Parent = settingForm;
-            closeButton.MouseClick += CloseSettingForm;
-            settingForm.ShowDialog();
+            S_SettingWidget.SettingWidget.SetActive(true);
         }
         
-        private void CloseSettingForm(object sender, EventArgs e)
-        {
-            settingForm.Close();
-        }
+
     }
 }
 
