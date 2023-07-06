@@ -6,6 +6,8 @@ using UnityEngine;
 public class S_ContextMenu : MonoBehaviour
 {
     public bool DefaultActive = false;
+
+    private RectTransform _rectTransform; 
     // Start is called before the first frame update
     private void Awake()
     {
@@ -16,18 +18,12 @@ public class S_ContextMenu : MonoBehaviour
         this.gameObject.SetActive(false);
         if(DefaultActive)
             this.gameObject.SetActive(true);
+        _rectTransform = this.transform.GetComponent<RectTransform>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        // #if !UNITY_EDITOR
-        // if (!S_TransparentWindow.IsUnityFocus())
-        // {
-        //     this.gameObject.SetActive(false);
-        // }
-        // #endif
-        
     }
 
     private void OnApplicationFocus(bool hasFocus)
@@ -45,20 +41,19 @@ public class S_ContextMenu : MonoBehaviour
 
     public void AdjustMenuPosition()
     {
-        var trans = this.transform.GetComponent<RectTransform>();
         //正常情况下从光标的【右下】出现
         var newTrans = Input.mousePosition;
         //如果光标在屏幕的下半边,则选择在【上】出现
         if (Input.mousePosition.y < UnityEngine.Screen.currentResolution.height / 2.0f)
         {
-            newTrans.y += trans.rect.height;
+            newTrans.y += _rectTransform.rect.height;
         }
         //如果光标在屏幕的右半边,则选择从【左】出现
         if (Input.mousePosition.x > UnityEngine.Screen.currentResolution.width / 2.0f)
         {
-            newTrans.x -= trans.rect.width;
+            newTrans.x -= _rectTransform.rect.width;
         }
-        trans.position = newTrans;
+        _rectTransform.position = newTrans;
     }
 
     public void ExitProgram()
