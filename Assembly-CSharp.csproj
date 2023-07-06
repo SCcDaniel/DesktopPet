@@ -100,7 +100,6 @@
      <Compile Include="Assets\Live2D\Cubism\Framework\Pose\CubismPoseController.cs" />
      <Compile Include="Assets\Resources\Script\S_TransparentWindow.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\Physics\CubismPhysicsNormalization.cs" />
-     <Compile Include="Assets\Unity.VisualScripting.Generated\VisualScripting.Core\AotStubs.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\CubismParameterExtensionMethods.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\CubismParametersInspector.cs" />
      <Compile Include="Assets\Live2D\Cubism\Rendering\CubismSortingModeExtensionMethods.cs" />
@@ -302,6 +301,7 @@
      <Folder Include="Assets\Live2D\Cubism\Plugins\Experimental\UWP\x86" />
      <Folder Include="Assets\Resources\Character\Fonts" />
      <Folder Include="Assets\Live2D\Cubism\Framework\Json" />
+     <Folder Include="Assets\Resources\Prefab" />
      <Folder Include="Assets\Live2D\Cubism\Framework\Motion" />
      <Folder Include="Assets\Live2D\Cubism\Rendering\Resources\Live2D\Cubism" />
      <Folder Include="Assets\StreamingAssets\Mali_offine_compiler\Plugins\samples\json_schemas" />
@@ -313,6 +313,7 @@
      <Folder Include="Assets\Live2D\Cubism\Rendering\Masking" />
      <Folder Include="Assets\Live2D\Cubism\Plugins\Android\armeabi-v7a" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
+     <Folder Include="Assets\Resources\Prefab\UI" />
      <Folder Include="Assets\StreamingAssets\Mali_offine_compiler\Plugins\samples" />
      <Folder Include="Assets\Live2D\Cubism\Plugins\Experimental\Emscripten\1_38_48" />
      <Folder Include="Assets\StreamingAssets\Mali_offine_compiler\Plugins\ShaderCache" />
@@ -328,7 +329,6 @@
      <Folder Include="Assets\TextMesh Pro\Documentation" />
      <None Include="Assets\Resources\Character\sjiang\sjiang.physics3.json" />
      <Folder Include="Assets\Live2D\Cubism\Plugins\Experimental\Emscripten\latest" />
-     <None Include="Assets\Unity.VisualScripting.Generated\VisualScripting.Core\link.xml" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile.shader" />
      <Folder Include="Assets\StreamingAssets\Mali_offine_compiler" />
      <Folder Include="Assets\Live2D\Cubism\Samples\OriginalWorkflow\Motion" />

@@ -5,18 +5,15 @@ using UnityEngine;
 
 public class S_ContextMenu : MonoBehaviour
 {
-    public static S_ContextMenu ContextMenu;
-
     public bool DefaultActive = false;
     // Start is called before the first frame update
     private void Awake()
     {
-        ContextMenu = this;
-        this.gameObject.SetActive(false);
     }
 
     void Start()
     {
+        this.gameObject.SetActive(false);
         if(DefaultActive)
             this.gameObject.SetActive(true);
     }
@@ -24,12 +21,44 @@ public class S_ContextMenu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        #if !UNITY_EDITOR
-        if (!S_TransparentWindow.IsUnityFocus())
+        // #if !UNITY_EDITOR
+        // if (!S_TransparentWindow.IsUnityFocus())
+        // {
+        //     this.gameObject.SetActive(false);
+        // }
+        // #endif
+        
+    }
+
+    private void OnApplicationFocus(bool hasFocus)
+    {
+        if (!hasFocus)
         {
             this.gameObject.SetActive(false);
         }
-        #endif
+    }
+
+    private void OnEnable()
+    {
+        AdjustMenuPosition();
+    }
+
+    public void AdjustMenuPosition()
+    {
+        var trans = this.transform.GetComponent<RectTransform>();
+        //正常情况下从光标的【右下】出现
+        var newTrans = Input.mousePosition;
+        //如果光标在屏幕的下半边,则选择在【上】出现
+        if (Input.mousePosition.y < UnityEngine.Screen.currentResolution.height / 2.0f)
+        {
+            newTrans.y += trans.rect.height;
+        }
+        //如果光标在屏幕的右半边,则选择从【左】出现
+        if (Input.mousePosition.x > UnityEngine.Screen.currentResolution.width / 2.0f)
+        {
+            newTrans.x -= trans.rect.width;
+        }
+        trans.position = newTrans;
     }
 
     public void ExitProgram()
@@ -43,6 +72,7 @@ public class S_ContextMenu : MonoBehaviour
 
     public void ShowSettingWidget()
     {
+        this.gameObject.SetActive(false);
         S_SettingWidget.SettingWidget.SetActive(true);
     }
 }
