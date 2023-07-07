@@ -1,17 +1,34 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class S_ContextMenu : MonoBehaviour
 {
     public bool DefaultActive = false;
 
-    private RectTransform _rectTransform; 
-    // Start is called before the first frame update
-    private void Awake()
+    private RectTransform _rectTransform;
+
+    //该菜单下的所有内容
+    private List<GameObject> _menuChildren;
+    
+    public enum MenuItemType
     {
+        Button,
+        NewMenu,
     }
+
+    public class MenuItem : UnityEngine.Object
+    {
+        public MenuItemType _type;
+        public string _name;
+    }
+
+    [HideInInspector]
+    public List<MenuItem> _menuItems = new List<MenuItem>();
 
     void Start()
     {
@@ -19,6 +36,8 @@ public class S_ContextMenu : MonoBehaviour
         if(DefaultActive)
             this.gameObject.SetActive(true);
         _rectTransform = this.transform.GetComponent<RectTransform>();
+        
+        Debug.Log(_menuItems.Count);
     }
 
     // Update is called once per frame
@@ -41,6 +60,11 @@ public class S_ContextMenu : MonoBehaviour
 
     public void AdjustMenuPosition()
     {
+        if (_rectTransform == null)
+        {
+            return;
+        }
+
         //正常情况下从光标的【右下】出现
         var newTrans = Input.mousePosition;
         //如果光标在屏幕的下半边,则选择在【上】出现

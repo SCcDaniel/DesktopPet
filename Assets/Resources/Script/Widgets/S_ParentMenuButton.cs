@@ -11,6 +11,7 @@ public class S_ParentMenu : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     private RectTransform _newMenuRectTransform;
     
     private RectTransform _rectTransform;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -20,15 +21,14 @@ public class S_ParentMenu : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        var buttonRect = _rectTransform.rect;
         var buttonPos = _rectTransform.position;
-        buttonPos.x += buttonRect.width;
+        buttonPos.x += _rectTransform.rect.width;
         _newMenuRectTransform.position = _rectTransform.position;
         _newMenu.SetActive(true);
+        
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        
     }
 }
