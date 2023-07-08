@@ -16,7 +16,6 @@ public class ProcessClass
     /// 执行CMD语句
     /// </summary>
     /// <param name="cmd">要执行的CMD命令</param>
-    /// 
     public ProcessClass()
     {
 
@@ -41,31 +40,31 @@ public class ProcessClass
     }
 }
 
-public class S_MaliOffineCompiler : MonoBehaviour
+public class S_MaliOffineCompiler
 {
-    enum EShaderType
+    public enum EShaderType
     {
         Unknow,
         VertexShader,
         PixelShader
     };
 
-    enum ERenderer
+    public enum ERenderer
     {
         OpenGLES = 0,
         Vulkan_GLSL =1,
     };
 
-    enum EEnvironment
+    public enum EEnvironment
     {
         None = 0,
         UE4 = 1,
     };
-
+    public static EEnvironment ShaderEnvironment = EEnvironment.UE4;
+    public static bool bOnlySpilling;
     EShaderType ShaderType = EShaderType.VertexShader;
     EShaderType ShaderTypeCache = EShaderType.VertexShader;
     ERenderer Renderer = ERenderer.OpenGLES;
-    EEnvironment ShaderEnvironment = EEnvironment.UE4;
     string currentCode;
     string ResultOut;
     System.Timers.Timer UpdateTimer; 
@@ -187,28 +186,28 @@ public class S_MaliOffineCompiler : MonoBehaviour
             string result = "", error = "";
             proc.RunCmd(cmdString, ref result, ref error);
             //只显示Spilling？
-            // if (WindowTray.S_WindowTray.MaliocItem_OnlyShowSpilling.Checked)
-            // {
-            //     string[] arr = result.Split(new string[] { "\n" }, StringSplitOptions.None);
-            //     result = "";
-            //     for (int i = 0; i < arr.Length; i++)
-            //     {
-            //         //根据空格分割，并去掉多余的空格。
-            //         if (arr[i].Contains(" variant"))
-            //         {
-            //             result += "-------------\n";
-            //             result += arr[i];
-            //         }
-            //         if (arr[i].Contains("Stack spilling"))
-            //         {
-            //             if (result.Length <= 1)
-            //             {
-            //                 result = "-------------\n";
-            //             }
-            //             result += arr[i];
-            //         }
-            //     }
-            // }
+            if (S_MaliOffineCompiler.bOnlySpilling)
+            {
+                string[] arr = result.Split(new string[] { "\n" }, StringSplitOptions.None);
+                result = "";
+                for (int i = 0; i < arr.Length; i++)
+                {
+                    //根据空格分割，并去掉多余的空格。
+                    if (arr[i].Contains(" variant"))
+                    {
+                        result += "-------------\n";
+                        result += arr[i];
+                    }
+                    if (arr[i].Contains("Stack spilling"))
+                    {
+                        if (result.Length <= 1)
+                        {
+                            result = "-------------\n";
+                        }
+                        result += arr[i];
+                    }
+                }
+            }
 
             ResultOut = result;
             if (error.Length > 0)

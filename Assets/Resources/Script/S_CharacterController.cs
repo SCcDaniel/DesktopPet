@@ -49,7 +49,7 @@ public class S_CharacterController : MonoBehaviour
                 }
             }
 
-            if (L_CursorHitResult.collider != null)
+            if (L_CursorHitResult.collider)
             {
                 if (L_CursorHitResult.collider.gameObject.tag.Equals("MainCharacter"))
                 {
@@ -73,9 +73,9 @@ public class S_CharacterController : MonoBehaviour
                 UnityEngine.Vector3 target = CurrentCursorPos + MainCamera.transform.forward * 1000.0f;
                 if (Physics.Raycast(CurrentCursorPos, target, out R_CursorHitResult))
                 {
-                    if (R_CursorHitResult.collider != null && R_CursorHitResult.collider.gameObject.tag.Equals("MainCharacter"))
+                    if (R_CursorHitResult.collider&& R_CursorHitResult.collider.gameObject.tag.Equals("MainCharacter"))
                     {
-                        if (MainContextMenu != null)
+                        if (MainContextMenu)
                         {
                             MainContextMenu.gameObject.SetActive(true);
                             MainContextMenu.GetComponent<S_ContextMenu>().AdjustMenuPosition();
