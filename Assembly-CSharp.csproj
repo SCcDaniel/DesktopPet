@@ -73,6 +73,7 @@
      <Compile Include="Assets\Live2D\Cubism\Rendering\CubismPartColorsEditor.cs" />
      <Compile Include="Assets\Live2D\Cubism\Core\Unmanaged\CubismUnmanagedParts.cs" />
      <Compile Include="Assets\Live2D\Cubism\Rendering\CubismRenderer.cs" />
+     <Compile Include="Assets\Resources\Script\Widgets\S_CheckBox.cs" />
      <Compile Include="Assets\Live2D\Cubism\Rendering\Masking\CubismMaskRenderer.cs" />
      <Compile Include="Assets\Live2D\Cubism\Core\Unmanaged\CubismUnmanagedCanvasInformation.cs" />
      <Compile Include="Assets\Live2D\Cubism\Core\CubismLogging.cs" />
@@ -85,6 +86,7 @@
      <Compile Include="Assets\Live2D\Cubism\Core\CubismTaskQueue.cs" />
      <Compile Include="Assets\Live2D\Cubism\Rendering\Masking\CubismMaskMaskedJunction.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\Json\CubismPose3Json.cs" />
+     <Compile Include="Assets\Resources\Script\Widgets\S_DialogBox.cs" />
      <Compile Include="Assets\Live2D\Cubism\Core\Unmanaged\CubismUnmanagedMoc.cs" />
      <Compile Include="Assets\Live2D\Cubism\Rendering\Masking\CubismMaskTilePool.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\Physics\CubismPhysicsMath.cs" />
@@ -106,6 +108,7 @@
      <Compile Include="Assets\Live2D\Cubism\Framework\CubismHitDrawable.cs" />
      <Compile Include="Assets\Live2D\Cubism\Core\Unmanaged\CubismUnmanagedParameters.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\UserData\CubismUserDataTag.cs" />
+     <Compile Include="Assets\HuggingFaceAPI\Examples\Scripts\SpeechRecognitionExample.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\LookAt\CubismLookParameter.cs" />
      <Compile Include="Assets\Live2D\Cubism\Rendering\ICubismOpacityHandler.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\Physics\CubismPhysicsInput.cs" />
@@ -135,6 +138,7 @@
      <Compile Include="Assets\Live2D\Cubism\Framework\MotionFade\CubismFadeMath.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\LookAt\ICubismLookTarget.cs" />
      <Compile Include="Assets\Live2D\Cubism\Samples\LookAt\Billboarder.cs" />
+     <Compile Include="Assets\HuggingFaceAPI\Examples\Scripts\ConversationExample.cs" />
      <Compile Include="Assets\Resources\Script\Widgets\S_OpenNewMenu.cs" />
      <Compile Include="Assets\Live2D\Cubism\Samples\AsyncBenchmark\BenchmarkController.cs" />
      <Compile Include="Assets\Live2D\Cubism\Core\CubismDynamicDrawableData.cs" />
@@ -158,6 +162,7 @@
      <Compile Include="Assets\Live2D\Cubism\Core\Unmanaged\CubismUnmanagedArrayView.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\UserData\CubismUserDataBody.cs" />
      <Compile Include="Assets\Live2D\Cubism\Core\ArrayExtensionMethods.cs" />
+     <Compile Include="Assets\HuggingFaceAPI\Examples\Scripts\TextToImageExample.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\Json\CubismModel3Json.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\Json\CubismMotion3Json.cs" />
      <Compile Include="Assets\Live2D\Cubism\Core\CubismDrawable.cs" />
@@ -192,6 +197,7 @@
      <Compile Include="Assets\Live2D\Cubism\Rendering\Masking\CubismMaskTile.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\LookAt\CubismLookAxis.cs" />
      <Compile Include="Assets\Live2D\Cubism\Rendering\CubismBuiltinMaterials.cs" />
+     <Compile Include="Assets\Resources\Script\S_Speech.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\Physics\CubismPhysicsController.cs" />
      <Compile Include="Assets\Live2D\Cubism\Rendering\ICubismBlendColorHandler.cs" />
      <Folder Include="Assets" />
@@ -215,6 +221,7 @@
      <Folder Include="Assets\StreamingAssets\Mali_offine_compiler\Plugins\graphics" />
      <Folder Include="Assets\Live2D\Cubism\Plugins\Windows\x86_64" />
      <Folder Include="Assets\Live2D\Cubism\Samples\PerspectiveCamera" />
+     <Folder Include="Assets\HuggingFaceAPI\Examples\Fonts" />
      <Folder Include="Assets\Live2D\Cubism\Plugins\Android\x86_64" />
      <Folder Include="Assets\Scenes" />
      <Folder Include="Assets\Resources\Script" />
@@ -251,6 +258,7 @@
      <Folder Include="Assets\TextMesh Pro" />
      <Folder Include="Assets\Unity.VisualScripting.Generated" />
      <Folder Include="Assets\Live2D\Cubism\Plugins\Experimental\UWP\x64" />
+     <Folder Include="Assets\HuggingFaceAPI\Examples\Scenes" />
      <Folder Include="Assets\Resources\Character" />
      <Folder Include="Assets\Live2D\Cubism\Samples\Raycasting" />
      <Folder Include="Assets\Live2D\Cubism\Samples\OriginalWorkflow\Demo" />
@@ -280,6 +288,7 @@
      <Folder Include="Assets\StreamingAssets\Mali_offine_compiler\Plugins\samples\json_reports" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile SSD.shader" />
+     <Folder Include="Assets\HuggingFaceAPI\Examples" />
      <None Include="Assets\StreamingAssets\Mali_offine_compiler\Plugins\samples\json_reports\info-report.json" />
      <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
      <Folder Include="Assets\Live2D\Cubism\Samples\LookAt" />
@@ -304,10 +313,13 @@
      <Folder Include="Assets\Live2D\Cubism\Plugins\Experimental\UWP\x86" />
      <Folder Include="Assets\Resources\Character\Fonts" />
      <Folder Include="Assets\Resources\Prefab\UI\Images" />
+     <Folder Include="Assets\HuggingFaceAPI\Examples\Sounds" />
+     <Folder Include="Assets\HuggingFaceAPI\Examples\Scripts" />
      <Folder Include="Assets\Live2D\Cubism\Framework\Json" />
      <Folder Include="Assets\Resources\Prefab" />
      <Folder Include="Assets\Live2D\Cubism\Framework\Motion" />
      <Folder Include="Assets\Live2D\Cubism\Rendering\Resources\Live2D\Cubism" />
+     <Folder Include="Assets\HuggingFaceAPI" />
      <Folder Include="Assets\StreamingAssets\Mali_offine_compiler\Plugins\samples\json_schemas" />
      <Folder Include="Assets\StreamingAssets" />
      <Folder Include="Assets\Unity.VisualScripting.Generated\VisualScripting.Core" />
@@ -597,6 +609,9 @@
      </Reference>
      <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
      <HintPath>D:\UGit\DesktopPet\Library\PackageCache\com.unity.visualscripting@1.8.0\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
+     </Reference>
+     <Reference Include="Newtonsoft.Json">
+     <HintPath>D:\UGit\DesktopPet\Library\PackageCache\com.unity.nuget.newtonsoft-json@3.2.1\Runtime\Newtonsoft.Json.dll</HintPath>
      </Reference>
      <Reference Include="mscorlib">
      <HintPath>F:\Unity\Unity2022_3_1f1c1\2022.3.1f1c1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\mscorlib.dll</HintPath>
@@ -1030,14 +1045,17 @@
      <Reference Include="Unity.VisualScripting.Flow">
      <HintPath>D:\UGit\DesktopPet\Library\ScriptAssemblies\Unity.VisualScripting.Flow.dll</HintPath>
      </Reference>
-     <Reference Include="Unity.VisualScripting.Flow.Editor">
-     <HintPath>D:\UGit\DesktopPet\Library\ScriptAssemblies\Unity.VisualScripting.Flow.Editor.dll</HintPath>
+     <Reference Include="HuggingFaceAPI.Editor">
+     <HintPath>D:\UGit\DesktopPet\Library\ScriptAssemblies\HuggingFaceAPI.Editor.dll</HintPath>
      </Reference>
      <Reference Include="Unity.InternalAPIEngineBridge.001">
      <HintPath>D:\UGit\DesktopPet\Library\ScriptAssemblies\Unity.InternalAPIEngineBridge.001.dll</HintPath>
      </Reference>
      <Reference Include="Unity.Mathematics.Editor">
      <HintPath>D:\UGit\DesktopPet\Library\ScriptAssemblies\Unity.Mathematics.Editor.dll</HintPath>
+     </Reference>
+     <Reference Include="Unity.VisualScripting.Flow.Editor">
+     <HintPath>D:\UGit\DesktopPet\Library\ScriptAssemblies\Unity.VisualScripting.Flow.Editor.dll</HintPath>
      </Reference>
      <Reference Include="Unity.2D.Common.Runtime">
      <HintPath>D:\UGit\DesktopPet\Library\ScriptAssemblies\Unity.2D.Common.Runtime.dll</HintPath>
@@ -1060,11 +1078,14 @@
      <Reference Include="Unity.InternalAPIEditorBridge.001">
      <HintPath>D:\UGit\DesktopPet\Library\ScriptAssemblies\Unity.InternalAPIEditorBridge.001.dll</HintPath>
      </Reference>
-     <Reference Include="Unity.2D.SpriteShape.Runtime">
-     <HintPath>D:\UGit\DesktopPet\Library\ScriptAssemblies\Unity.2D.SpriteShape.Runtime.dll</HintPath>
+     <Reference Include="HuggingFaceAPI">
+     <HintPath>D:\UGit\DesktopPet\Library\ScriptAssemblies\HuggingFaceAPI.dll</HintPath>
      </Reference>
      <Reference Include="Unity.VisualScripting.State.Editor">
      <HintPath>D:\UGit\DesktopPet\Library\ScriptAssemblies\Unity.VisualScripting.State.Editor.dll</HintPath>
+     </Reference>
+     <Reference Include="Unity.2D.SpriteShape.Runtime">
+     <HintPath>D:\UGit\DesktopPet\Library\ScriptAssemblies\Unity.2D.SpriteShape.Runtime.dll</HintPath>
      </Reference>
      <Reference Include="Unity.2D.PixelPerfect">
      <HintPath>D:\UGit\DesktopPet\Library\ScriptAssemblies\Unity.2D.PixelPerfect.dll</HintPath>

@@ -18,6 +18,7 @@ public class S_Inspector_ContextMenu : Editor
     private SerializedProperty _menuItems_event_Seri;
     private SerializedProperty _menuItems_parentIndex_Seri;
     private SerializedProperty _menuItems_checkBox_Seri;
+    private SerializedProperty _menuItems_checkBoxCanDisable_Seri;
     private SerializedProperty _menuItems_dropDown_Seri;
     private SerializedProperty _menuItems_event_oneParam_int_Seri;
     private List<bool> _menuItemOpen= new List<bool>();
@@ -38,6 +39,7 @@ public class S_Inspector_ContextMenu : Editor
         _menuItems_event_Seri = serializedObject.FindProperty("_menuItems_event");
         _menuItems_parentIndex_Seri = serializedObject.FindProperty("_menuItems_parentIndex");
         _menuItems_checkBox_Seri = serializedObject.FindProperty("_menuItems_checkBox");
+        _menuItems_checkBoxCanDisable_Seri = serializedObject.FindProperty("_menuItems_checkBoxCanDisable");
         _menuItems_dropDown_Seri = serializedObject.FindProperty("_menuItems_dropDown");
         _menuItems_event_oneParam_int_Seri = serializedObject.FindProperty("_menuItems_event_oneParam_int");
 
@@ -53,6 +55,7 @@ public class S_Inspector_ContextMenu : Editor
             _contextMenu._menuItems_event.Add(new ItemAction());
             _contextMenu._menuItems_parentIndex.Add(-1);//
             _contextMenu._menuItems_checkBox.Add(false);
+            _contextMenu._menuItems_checkBoxCanDisable.Add(true);
             _contextMenu._menuItems_dropDown.Add("");
             _contextMenu._menuItems_event_oneParam_int.Add(new ItemActionInt());
         }
@@ -67,6 +70,7 @@ public class S_Inspector_ContextMenu : Editor
                 _contextMenu._menuItems_checkBox.RemoveAt(_contextMenu._menuItems_checkBox.Count - 1);
                 _contextMenu._menuItems_dropDown.RemoveAt(_contextMenu._menuItems_dropDown.Count - 1);
                 _contextMenu._menuItems_event_oneParam_int.RemoveAt(_contextMenu._menuItems_event_oneParam_int.Count - 1);
+                _contextMenu._menuItems_checkBoxCanDisable.RemoveAt(_contextMenu._menuItems_checkBoxCanDisable.Count - 1);
             }
         }
         EditorGUILayout.EndHorizontal();
@@ -116,10 +120,16 @@ public class S_Inspector_ContextMenu : Editor
                 _contextMenu._menuItems_event_oneParam_int.Add(new ItemActionInt());
                 serializedObject.Update();
             }
+            if(_contextMenu._menuItems_checkBoxCanDisable.Count<=i)
+            {
+                _contextMenu._menuItems_checkBoxCanDisable.Add(true);
+                serializedObject.Update();
+            }
             //
             EditorGUILayout.BeginHorizontal();
             GUIStyle style = new GUIStyle("FoldOutPreDrop");
-            _menuItemOpen[i] = EditorGUILayout.Foldout(_menuItemOpen[i], "Menu Item " + i.ToString());
+            _menuItemOpen[i] = EditorGUILayout.Foldout(_menuItemOpen[i], "Item " + i.ToString() + "__(Parent:" + _contextMenu._menuItems_parentIndex[i].ToString() + ")___" + _contextMenu._menuItems_name[i]);
+            //
             if (i > 0)
             {
                 if (EditorGUILayout.LinkButton("↑"))
@@ -158,7 +168,8 @@ public class S_Inspector_ContextMenu : Editor
                 else if (_contextMenu._menuItems_type[i] == MenuItemType.CheckBox)
                 {
                     _contextMenu._menuItems_checkBox[i] = EditorGUILayout.Toggle("默认值",_contextMenu._menuItems_checkBox[i]);
-                    EditorGUILayout.PropertyField(_menuItems_event_Seri.GetArrayElementAtIndex(i));
+                    _contextMenu._menuItems_checkBoxCanDisable[i] = EditorGUILayout.Toggle("是否运行再次点击关闭",_contextMenu._menuItems_checkBoxCanDisable[i]);
+                    EditorGUILayout.PropertyField(_menuItems_event_oneParam_int_Seri.GetArrayElementAtIndex(i));
                 }
                 else if (_contextMenu._menuItems_type[i] == MenuItemType.DropDownBox)
                 {
@@ -184,6 +195,7 @@ public class S_Inspector_ContextMenu : Editor
             _contextMenu._menuItems_event.RemoveAt(deleteIndex[i]);
             _contextMenu._menuItems_parentIndex.RemoveAt(deleteIndex[i]);
             _contextMenu._menuItems_checkBox.RemoveAt(deleteIndex[i]);
+            _contextMenu._menuItems_checkBoxCanDisable.RemoveAt(deleteIndex[i]);
             _contextMenu._menuItems_dropDown.RemoveAt(deleteIndex[i]);
             _contextMenu._menuItems_event_oneParam_int.RemoveAt(deleteIndex[i]);
             _menuItemOpen.RemoveAt(deleteIndex[i]);
@@ -233,6 +245,10 @@ public class S_Inspector_ContextMenu : Editor
             var checkBoxTemp = _contextMenu._menuItems_checkBox[index];
             _contextMenu._menuItems_checkBox[index] = _contextMenu._menuItems_checkBox[index- factor];  
             _contextMenu._menuItems_checkBox[index- factor] = checkBoxTemp;
+            //
+            var checkBoxCanDisableTemp = _contextMenu._menuItems_checkBoxCanDisable[index];
+            _contextMenu._menuItems_checkBoxCanDisable[index] = _contextMenu._menuItems_checkBoxCanDisable[index- factor];  
+            _contextMenu._menuItems_checkBoxCanDisable[index- factor] = checkBoxCanDisableTemp;
             //
             var dropdownTemp = _contextMenu._menuItems_dropDown[index];
             _contextMenu._menuItems_dropDown[index] = _contextMenu._menuItems_dropDown[index - factor];  

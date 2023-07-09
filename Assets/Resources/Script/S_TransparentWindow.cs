@@ -5,6 +5,7 @@ using System.Drawing;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using WindowTray;
+
 #endif
 
 public class S_TransparentWindow : MonoBehaviour
@@ -92,6 +93,8 @@ public class S_TransparentWindow : MonoBehaviour
     {
         return GetFocus() == hwnd;
     }
+    
+    
 
 #endif
 

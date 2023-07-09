@@ -109,10 +109,10 @@ RectTransform:
   m_Father: {fileID: 840288529153893166}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -15}
+  m_SizeDelta: {x: 0, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &228986973310452665
 CanvasRenderer:
@@ -142,10 +142,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: XX
+  m_text: XXXXXXX
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 252b5f25a4ca5cf4d87856ea2c837213, type: 2}
-  m_sharedMaterial: {fileID: -3629497822832186505, guid: 252b5f25a4ca5cf4d87856ea2c837213, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b20f6c791b7224646b5753d52959a100, type: 2}
+  m_sharedMaterial: {fileID: -5160081179051866403, guid: b20f6c791b7224646b5753d52959a100, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -169,8 +169,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -223,6 +223,7 @@ GameObject:
   - component: {fileID: 1340519609286756027}
   - component: {fileID: 4356578757856725242}
   - component: {fileID: 2561870483880914899}
+  - component: {fileID: 5648863578234633161}
   m_Layer: 5
   m_Name: Enum_CheckBox
   m_TagString: Untagged
@@ -250,7 +251,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 165, y: 30}
+  m_SizeDelta: {x: 200, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1340519609286756027
 CanvasRenderer:
@@ -346,3 +347,21 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &5648863578234633161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5417639376400010289}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 899d0a57366d8974a9149c5b884b3a9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bChecked: 0
+  bCanDisable: 1
+  _image: {fileID: 613682993002784576}
+  _action:
+    m_PersistentCalls:
+      m_Calls: []

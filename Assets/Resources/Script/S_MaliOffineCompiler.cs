@@ -1,11 +1,7 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Windows.Forms;
 using System.IO;
-using System.Drawing;
-using System.Timers;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
@@ -16,10 +12,6 @@ public class ProcessClass
     /// 执行CMD语句
     /// </summary>
     /// <param name="cmd">要执行的CMD命令</param>
-    public ProcessClass()
-    {
-
-    }
     public void RunCmd(string cmd ,ref string output , ref string error)
     {
         Process proc = new Process();
@@ -28,7 +20,7 @@ public class ProcessClass
         proc.StartInfo.UseShellExecute = false;
         proc.StartInfo.RedirectStandardError = true;
         proc.StartInfo.RedirectStandardInput = true;
-        proc.StartInfo.RedirectStandardOutput = true;
+        proc.StartInfo.RedirectStandardOutput = true; 
         proc.Start();//执行 
 
         proc.StandardInput.WriteLine(cmd);
@@ -61,59 +53,59 @@ public class S_MaliOffineCompiler
         UE4 = 1,
     };
     public static EEnvironment ShaderEnvironment = EEnvironment.UE4;
-    public static bool bOnlySpilling;
-    EShaderType ShaderType = EShaderType.VertexShader;
-    EShaderType ShaderTypeCache = EShaderType.VertexShader;
-    ERenderer Renderer = ERenderer.OpenGLES;
-    string currentCode;
-    string ResultOut;
-    System.Timers.Timer UpdateTimer; 
-    private void Start()
-    {
-        UpdateTimer = new System.Timers.Timer();
-        UpdateTimer.AutoReset = true;
-        UpdateTimer.Interval = 1000.0f;
-        UpdateTimer.Enabled = true;
-        UpdateTimer.Elapsed+= Execute;
-        UpdateTimer.Start();
-    }
+    public static bool bOnlySpilling = true;
+    public static EShaderType ShaderType = EShaderType.VertexShader;
+    public static EShaderType ShaderTypeCache = EShaderType.VertexShader;
+    public static ERenderer Renderer = ERenderer.OpenGLES;
+    public static string currentCode = "" ;
+    public static string ResultOut = "" ;
+    public static System.Timers.Timer UpdateTimer;
 
     public S_MaliOffineCompiler()
     {
         ShaderType = EShaderType.VertexShader;
         Renderer = ERenderer.OpenGLES;
+        //
+        // UpdateTimer = new System.Timers.Timer();
+        // UpdateTimer.AutoReset = true;
+        // UpdateTimer.Interval = 1000.0f;
+        // UpdateTimer.Enabled = true;
+        // UpdateTimer.Elapsed+= AutoExecute;
+        //UpdateTimer.Start();
     }
 
-    private void Execute(object sender, System.Timers.ElapsedEventArgs e)
+    void AutoExecute(object sender, System.Timers.ElapsedEventArgs e)
     {
-        if (!Clipboard.ContainsText())
+        Execute();
+        Debug.Log("Auto execute");
+    }
+
+    static public void Execute()
+    {
+        if (GUIUtility.systemCopyBuffer == null)
         {
-            Debug.Log("当前没有文字在粘贴板...");
+            S_DialogBox.DialogBox.Say("粘贴板没有内容哦...");
             return;
         }
-
-        if  (WindowTray.S_WindowTray._notifyIcon == null)
-        {
-            //后台还未准备好
-            return;
-        }
-
         //获取粘贴板内容
-        IDataObject clipboardData = Clipboard.GetDataObject();
-        if (clipboardData.GetDataPresent(DataFormats.Text))
+        //IDataObject clipboardData = Clipboard.GetDataObject();
+        //if (clipboardData.GetDataPresent(DataFormats.Text))
         {
+            //object obj = clipboardData.GetData(DataFormats.Text);
+            //if (obj == null)
+            //{
+            //    return;
+            //}
+            //shaderCode = (string)obj;
+            
             string shaderCode;
             string shaderCacheFilePath = UnityEngine.Application.streamingAssetsPath + "/Mali_offine_compiler/Plugins/ShaderCache";
-            object obj = clipboardData.GetData(DataFormats.Text);
-            if (obj == null)
-            {
-                return;
-            }
-            shaderCode = (string)obj;
-
+            shaderCode = GUIUtility.systemCopyBuffer;
+            
             //当前代码和上传相同,不执行
             if (currentCode.Equals(shaderCode))
             {
+                S_DialogBox.DialogBox.Say("我不会处理相同内容的啦...");
                 return;
             }
             currentCode = shaderCode;
@@ -121,14 +113,15 @@ public class S_MaliOffineCompiler
             //内容太少,不执行
             if ( shaderCode.Length <=20)
             {
+                S_DialogBox.DialogBox.Say("你在小看我吗!!内容不对啊!");
                 return;
             }
             
             //头部关键字获取判断
-            string HeaderStr = shaderCode.Remove(30);
+            string HeaderStr = shaderCode.Remove(20);
             if (!HeaderStr.Contains("#version ")&& !HeaderStr.Contains("SPIR-V"))
             {
-                WindowTray.S_WindowTray._notifyIcon.ShowBalloonTip(2500, "", "你都复制了些啥呀...", ToolTipIcon.None);
+                S_DialogBox.DialogBox.Say("你都复制了些啥呀...");
                 return;
             }
 
@@ -144,7 +137,7 @@ public class S_MaliOffineCompiler
                     }
                 }
             }
-
+ 
             string cmdString = UnityEngine.Application.streamingAssetsPath + "/Mali_offine_compiler/Plugins/malioc.exe";
 
             if (Renderer == ERenderer.OpenGLES)
@@ -180,13 +173,14 @@ public class S_MaliOffineCompiler
             wr.WriteLine(shaderCode);
             wr.Close();
             //
-
+            
             cmdString += shaderCacheFilePath;
             ProcessClass proc = new ProcessClass();
             string result = "", error = "";
             proc.RunCmd(cmdString, ref result, ref error);
+            
             //只显示Spilling？
-            if (S_MaliOffineCompiler.bOnlySpilling)
+            if (bOnlySpilling)
             {
                 string[] arr = result.Split(new string[] { "\n" }, StringSplitOptions.None);
                 result = "";
@@ -214,21 +208,21 @@ public class S_MaliOffineCompiler
             {
                 ResultOut += "\n";
                 ResultOut += error;
-                WindowTray.S_WindowTray._notifyIcon.ShowBalloonTip(5000, "有错误哦", ResultOut, ToolTipIcon.Warning);
+                S_DialogBox.DialogBox.Say("好像有错误哦\n" + ResultOut);
             }
             else if ( ResultOut.Length < 10 )
             {
                 ResultOut = "没有输出...好像有什么不太对劲，\n可能是参数不对，\n可以把[只显示Spilling]关掉看看详细说明。";
-                WindowTray.S_WindowTray._notifyIcon.ShowBalloonTip(2500, "???", ResultOut, ToolTipIcon.Warning);
+                S_DialogBox.DialogBox.Say(ResultOut);
             }
             else
             {
-                WindowTray.S_WindowTray._notifyIcon.ShowBalloonTip(5000, "结果", ResultOut, ToolTipIcon.Info);
+                S_DialogBox.DialogBox.Say(ResultOut);
             }
         }
-        else
-        {
-            ResultOut = "无法从粘贴板找到任何文字内容。";
-        }
+        // else
+        // {
+        //     ResultOut = "无法从粘贴板找到任何文字内容。";
+        // }
     }
 }

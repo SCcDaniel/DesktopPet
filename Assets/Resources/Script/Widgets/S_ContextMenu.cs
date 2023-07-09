@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using Button = UnityEngine.UI.Button;
 
 public enum MenuItemType 
 {
@@ -24,7 +26,7 @@ public class  ItemActionString: UnityEvent<string>{ }
 [System.Serializable]
 public class  ItemActionInt: UnityEvent<int>{ }
 
-public class S_ContextMenu : MonoBehaviour
+public class S_ContextMenu : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler
 {
     public bool DefaultActive = false;
 
@@ -60,6 +62,9 @@ public class S_ContextMenu : MonoBehaviour
     
     [HideInInspector]
     public List<bool> _menuItems_checkBox= new List<bool>();
+    
+    [HideInInspector]
+    public List<bool> _menuItems_checkBoxCanDisable= new List<bool>();
 
     [HideInInspector]
     public List<string> _menuItems_dropDown= new List<string>();
@@ -69,6 +74,25 @@ public class S_ContextMenu : MonoBehaviour
     //< 哪个Item对象 , 存了多少内容 >
     public Dictionary<int, List<GameObject>> _menuItemMap = new Dictionary<int, List<GameObject>>();
 
+    public GameObject FromOpenNewMenuButton = null;
+
+    public bool bPointState = true;
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (FromOpenNewMenuButton)
+        {
+            bPointState = true;
+        }
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (FromOpenNewMenuButton)
+        {
+            bPointState = false;
+        }
+    }
+    
     void Start()
     {
         this.gameObject.SetActive(false);
@@ -126,6 +150,14 @@ public class S_ContextMenu : MonoBehaviour
             if (_menuItems_event[i] != null && button)
             {
                 button.onClick.AddListener((_menuItems_event[i]).Invoke);
+            }
+            //CheckBox
+            S_CheckBox checkBox = obj.GetComponent<S_CheckBox>();
+            if (checkBox)
+            {
+                checkBox.bChecked = _menuItems_checkBox[i];
+                checkBox._action = _menuItems_event_oneParam_int[i];
+                checkBox.bCanDisable = _menuItems_checkBoxCanDisable[i];
             }
             //Set map
             if (_menuItems_parentIndex[i] >= 0)
