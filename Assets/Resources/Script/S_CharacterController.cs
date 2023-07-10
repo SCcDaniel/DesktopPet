@@ -9,6 +9,7 @@ using Screen = System.Windows.Forms.Screen;
 
 public class S_CharacterController : MonoBehaviour
 {
+    static public List<GameObject> Characters = new List<GameObject>();
     public Camera MainCamera;
     public GameObject MainContextMenu;
     private UnityEngine.Vector3 CurrentCursorPos;
@@ -25,6 +26,7 @@ public class S_CharacterController : MonoBehaviour
         {
             MainContextMenu = GameObject.FindWithTag("MainMenu");
         }
+        Characters.AddRange(GameObject.FindGameObjectsWithTag("MainCharacter"));
     }
 
     // Update is called once per frame

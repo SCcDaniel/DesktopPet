@@ -13,21 +13,40 @@ public class S_CheckBox : MonoBehaviour
     public ItemActionInt _action = new ItemActionInt();
     private void Start()
     {
+        //
         _button = GetComponent<Button>();
         _button.onClick.AddListener(() =>
         {
             if (bChecked && bCanDisable)
             {
                 bChecked = false;
-                _action.Invoke(0);
+                if (_action != null)
+                    _action.Invoke(0);
                 _image.SetActive(false);
             }
             else
             {
                 bChecked = true;
-                _action.Invoke(1);
+                if (_action != null)
+                    _action.Invoke(1);
                 _image.SetActive(true);
             }
         });
+    }
+
+    public void UpdateState()
+    {
+        if (!bChecked)
+        {
+            if (_action != null)
+                _action.Invoke(0);
+            _image.SetActive(false);
+        }
+        else
+        {
+            if (_action != null)
+                _action.Invoke(1);
+            _image.SetActive(true);
+        }
     }
 }

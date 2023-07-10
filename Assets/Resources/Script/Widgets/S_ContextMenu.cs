@@ -74,6 +74,7 @@ public class S_ContextMenu : MonoBehaviour,IPointerEnterHandler,IPointerExitHand
     //< 哪个Item对象 , 存了多少内容 >
     public Dictionary<int, List<GameObject>> _menuItemMap = new Dictionary<int, List<GameObject>>();
 
+    [HideInInspector]
     public GameObject FromOpenNewMenuButton = null;
 
     public bool bPointState = true;
@@ -143,6 +144,7 @@ public class S_ContextMenu : MonoBehaviour,IPointerEnterHandler,IPointerExitHand
                 if (_menuItems_event_oneParam_int[i] != null)
                 {
                     dropdown.onValueChanged.AddListener(_menuItems_event_oneParam_int[i].Invoke);
+                    _menuItems_event_oneParam_int[i].Invoke(dropdown.value);
                 }
             }
             //button event
@@ -158,28 +160,41 @@ public class S_ContextMenu : MonoBehaviour,IPointerEnterHandler,IPointerExitHand
                 checkBox.bChecked = _menuItems_checkBox[i];
                 checkBox._action = _menuItems_event_oneParam_int[i];
                 checkBox.bCanDisable = _menuItems_checkBoxCanDisable[i];
+                if (_menuItems_event_oneParam_int[i] != null)
+                {
+                    //_menuItems_event_oneParam_int[i].Invoke(Convert.ToInt32(_menuItems_checkBox[i]));
+                    checkBox.UpdateState();
+                }
             }
             //Set map
             if (_menuItems_parentIndex[i] >= 0)
             {
-                if (_menuItemMap.ContainsKey(_menuItems_parentIndex[i]))
-                {
-                    _menuItemMap[_menuItems_parentIndex[i]].Add(obj);
-                }
-                else
-                {
-                    List<GameObject> newList = new List<GameObject>();
-                    newList.Add(obj);
-                    _menuItemMap.Add(_menuItems_parentIndex[i], newList);
-                    //
-                    var newMenu = Instantiate(Prefab_Menu,this.transform.parent);
-                    newMenu.name = "Menu_From_" + _menuChildren[_menuItems_parentIndex[i]].name;
-                    _menus.Add(_menuItems_parentIndex[i],newMenu);
-                }
-                obj.transform.SetParent(_menus[_menuItems_parentIndex[i]].transform);
                 var openMenuScript = _menuChildren[_menuItems_parentIndex[i]].GetComponent<S_OpenNewMenu>();
-                openMenuScript.MainMenu = this;
-                openMenuScript.NewMenuObject = _menus[_menuItems_parentIndex[i]];
+                if (_menuItems_type[i] == MenuItemType.OpenNewMenu)
+                {
+                    openMenuScript.MenuLevel = _menuItems_parentIndex[i] + 1 ;
+                }
+                if (openMenuScript)
+                {
+                    if (_menuItemMap.ContainsKey(_menuItems_parentIndex[i]))
+                    {
+                        _menuItemMap[_menuItems_parentIndex[i]].Add(obj);
+                    }
+                    else
+                    {
+                        List<GameObject> newList = new List<GameObject>();
+                        newList.Add(obj);
+                        _menuItemMap.Add(_menuItems_parentIndex[i], newList);
+                        //
+                        var newMenu = Instantiate(Prefab_Menu,this.transform.parent);
+                        newMenu.name = "Menu_From_" + _menuChildren[_menuItems_parentIndex[i]].name;
+                        _menus.Add(_menuItems_parentIndex[i],newMenu);
+                    }
+                    obj.transform.SetParent(_menus[_menuItems_parentIndex[i]].transform);
+                
+                    openMenuScript.MainMenu = this;
+                    openMenuScript.NewMenuObject = _menus[_menuItems_parentIndex[i]];
+                }
             }
         }
     }

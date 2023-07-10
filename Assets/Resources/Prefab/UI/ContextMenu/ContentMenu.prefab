@@ -183,10 +183,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DefaultActive: 0
-  Prefab_Menu: {fileID: 118195476383393973, guid: 6d46f37122047dd4396297340d9ff79a, type: 3}
-  Prefab_Button: {fileID: 5417639376400010289, guid: 047028c2d0bc26d4292fb9d78597147e, type: 3}
+  Prefab_Menu: {fileID: 8600829134875103151, guid: 6d46f37122047dd4396297340d9ff79a, type: 3}
+  Prefab_Button: {fileID: 3125245121994267844, guid: 047028c2d0bc26d4292fb9d78597147e, type: 3}
   Prefab_OpenNewMenu: {fileID: 5417639376400010289, guid: 840dc81372947da44b5bdc59462bc6d1, type: 3}
   Prefab_CheckBox: {fileID: 5417639376400010289, guid: 00c9daf9f823a8c4a886362a54ffc42e, type: 3}
+  Prefab_DropDown: {fileID: 6307209154100999152, guid: 32e1e97b5fbaf1a419c2efb6e0c59d2b, type: 3}
   _menuItems_name:
   - Malioc
   - "\u8BBE\u7F6E"
@@ -251,4 +252,21 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  _menuItems_event_oneParam_int:
+  - m_PersistentCalls:
+      m_Calls: []
+  - m_PersistentCalls:
+      m_Calls: []
+  - m_PersistentCalls:
+      m_Calls: []
+  - m_PersistentCalls:
+      m_Calls: []
   _menuItems_checkBox: 00000001
+  _menuItems_checkBoxCanDisable: 01010101
+  _menuItems_dropDown:
+  - 
+  - 
+  - 
+  - 
+  FromOpenNewMenuButton: {fileID: 0}
+  bPointState: 1

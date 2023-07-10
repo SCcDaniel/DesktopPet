@@ -2,16 +2,14 @@ using System;
 using System.Collections;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
+using Unity.Collections;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
 public class ProcessClass
 {
     private Process proc;
-    /// <summary>
-    /// 执行CMD语句
-    /// </summary>
-    /// <param name="cmd">要执行的CMD命令</param>
     public void RunCmd(string cmd ,ref string output , ref string error)
     {
         Process proc = new Process();
@@ -20,13 +18,14 @@ public class ProcessClass
         proc.StartInfo.UseShellExecute = false;
         proc.StartInfo.RedirectStandardError = true;
         proc.StartInfo.RedirectStandardInput = true;
-        proc.StartInfo.RedirectStandardOutput = true; 
-        proc.Start();//执行 
-
+        proc.StartInfo.RedirectStandardOutput = true;
+        proc.StartInfo.StandardOutputEncoding = System.Text.Encoding.GetEncoding(65001);
+        proc.Start();//执行
+        proc.StandardInput.WriteLine("chcp 65001");
         proc.StandardInput.WriteLine(cmd);
-        proc.StandardInput.Close();
+        proc.StandardInput.Close(); 
         output = proc.StandardOutput.ReadToEnd();//获取返回值   
-        error = proc.StandardError.ReadToEnd();//获取返回值   
+        error = proc.StandardError.ReadToEnd();//获取返回值
         proc.WaitForExit();//等待程序执行完退出进程   
         proc.Close();//结束
     }
@@ -52,6 +51,7 @@ public class S_MaliOffineCompiler
         None = 0,
         UE4 = 1,
     };
+    public static ProcessClass proc = new ProcessClass();
     public static EEnvironment ShaderEnvironment = EEnvironment.UE4;
     public static bool bOnlySpilling = true;
     public static EShaderType ShaderType = EShaderType.VertexShader;
@@ -60,27 +60,21 @@ public class S_MaliOffineCompiler
     public static string currentCode = "" ;
     public static string ResultOut = "" ;
     public static System.Timers.Timer UpdateTimer;
-
+    public static bool MaliocAutoExecute = false;
     public S_MaliOffineCompiler()
     {
         ShaderType = EShaderType.VertexShader;
         Renderer = ERenderer.OpenGLES;
         //
-        // UpdateTimer = new System.Timers.Timer();
-        // UpdateTimer.AutoReset = true;
-        // UpdateTimer.Interval = 1000.0f;
-        // UpdateTimer.Enabled = true;
-        // UpdateTimer.Elapsed+= AutoExecute;
-        //UpdateTimer.Start();
     }
 
-    void AutoExecute(object sender, System.Timers.ElapsedEventArgs e)
+    static public void AutoExecute(object sender, System.Timers.ElapsedEventArgs e)
     {
         Execute();
-        Debug.Log("Auto execute");
+        //Debug.Log("Auto execute");
     }
 
-    static public void Execute()
+    static public void Execute(bool focus = false)
     {
         if (GUIUtility.systemCopyBuffer == null)
         {
@@ -97,15 +91,27 @@ public class S_MaliOffineCompiler
             //    return;
             //}
             //shaderCode = (string)obj;
-            
+            if (!focus)
+            {
+                if (S_DialogBox.DialogBox.CopyStateString.Contains(GUIUtility.systemCopyBuffer))
+                {
+                    return;
+                }
+                else
+                {
+                    S_DialogBox.DialogBox.CopyStateString = "";
+                }
+            }
+
             string shaderCode;
-            string shaderCacheFilePath = UnityEngine.Application.streamingAssetsPath + "/Mali_offine_compiler/Plugins/ShaderCache";
+            string shaderCacheFilePath =UnityEngine.Application.streamingAssetsPath + "/Mali_offine_compiler/Plugins/ShaderCache/ShaderCache";
             shaderCode = GUIUtility.systemCopyBuffer;
             
+
             //当前代码和上传相同,不执行
             if (currentCode.Equals(shaderCode))
             {
-                S_DialogBox.DialogBox.Say("我不会处理相同内容的啦...");
+                //S_DialogBox.DialogBox.Say("我不会处理相同内容的啦...");
                 return;
             }
             currentCode = shaderCode;
@@ -113,7 +119,7 @@ public class S_MaliOffineCompiler
             //内容太少,不执行
             if ( shaderCode.Length <=20)
             {
-                S_DialogBox.DialogBox.Say("你在小看我吗!!内容不对啊!");
+                S_DialogBox.DialogBox.Say("你在小看我吗!!内容不对啊!" , 8000);
                 return;
             }
             
@@ -121,7 +127,7 @@ public class S_MaliOffineCompiler
             string HeaderStr = shaderCode.Remove(20);
             if (!HeaderStr.Contains("#version ")&& !HeaderStr.Contains("SPIR-V"))
             {
-                S_DialogBox.DialogBox.Say("你都复制了些啥呀...");
+                S_DialogBox.DialogBox.Say("你都复制了些啥呀..." , 6000);
                 return;
             }
 
@@ -139,16 +145,16 @@ public class S_MaliOffineCompiler
             }
  
             string cmdString = UnityEngine.Application.streamingAssetsPath + "/Mali_offine_compiler/Plugins/malioc.exe";
-
+            string shaderCacheFile = shaderCacheFilePath;
             if (Renderer == ERenderer.OpenGLES)
             {
                 switch (ShaderType)
                 {
                     case EShaderType.VertexShader:
-                        shaderCacheFilePath += ".vert";
+                        shaderCacheFile += ".vert";
                         break;
                     case EShaderType.PixelShader:
-                        shaderCacheFilePath += ".frag";
+                        shaderCacheFile += ".frag";
                         break;
                 }
             }
@@ -158,24 +164,23 @@ public class S_MaliOffineCompiler
                 {
                     case EShaderType.VertexShader:
                         cmdString += " --vulkan ";
-                        shaderCacheFilePath += ".vert";
+                        shaderCacheFile += ".vert";
                         break;
                     case EShaderType.PixelShader:
                         cmdString += " --vulkan ";
-                        shaderCacheFilePath += ".frag";
+                        shaderCacheFile += ".frag";
                         break;
                 }
             }
 
             //生成临时shader文件
-            FileStream fs = new FileStream(shaderCacheFilePath, FileMode.Create);
+            FileStream fs = new FileStream(shaderCacheFile, FileMode.Create);
             StreamWriter wr = new StreamWriter(fs);
             wr.WriteLine(shaderCode);
             wr.Close();
             //
             
-            cmdString += shaderCacheFilePath;
-            ProcessClass proc = new ProcessClass();
+            cmdString += " "+ shaderCacheFile;
             string result = "", error = "";
             proc.RunCmd(cmdString, ref result, ref error);
             
@@ -206,19 +211,27 @@ public class S_MaliOffineCompiler
             ResultOut = result;
             if (error.Length > 0)
             {
-                ResultOut += "\n";
+                if(ResultOut.Length > 0)
+                    ResultOut += "\n";
                 ResultOut += error;
-                S_DialogBox.DialogBox.Say("好像有错误哦\n" + ResultOut);
+                S_DialogBox.DialogBox.Say("好像有错误哦\n" + ResultOut,1000000.0f);
+                currentCode = "";
             }
             else if ( ResultOut.Length < 10 )
             {
                 ResultOut = "没有输出...好像有什么不太对劲，\n可能是参数不对，\n可以把[只显示Spilling]关掉看看详细说明。";
-                S_DialogBox.DialogBox.Say(ResultOut);
+                S_DialogBox.DialogBox.Say(ResultOut,1000000.0f);
             }
             else
             {
-                S_DialogBox.DialogBox.Say(ResultOut);
+                S_DialogBox.DialogBox.Say("有结果啦..\n" + ResultOut,1000000.0f);
             }
+            //output logs生成Logs
+            //Debug.Log(ResultOut);
+            fs = new FileStream(shaderCacheFilePath + "_log.txt", FileMode.Create);
+            wr = new StreamWriter(fs);
+            wr.WriteLine(ResultOut);
+            wr.Close();
         }
         // else
         // {
