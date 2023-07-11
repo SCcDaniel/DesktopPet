@@ -34,7 +34,7 @@ public class S_SettingWidget : MonoBehaviour
     {
         TransparentValue = value;
         #if !UNITY_EDITOR
-                S_TransparentWindow.SetWindowAttributes(TransparentValue);
+                //S_TransparentWindow.SetWindowAttributes(TransparentValue);
         #endif
 
     }
