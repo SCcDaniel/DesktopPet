@@ -8,7 +8,6 @@ using Debug = UnityEngine.Debug;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
-using System.Reflection;
 using WindowTray;
 
 #endif
@@ -145,6 +144,9 @@ public class S_TransparentWindow : MonoBehaviour
     [DllImport("user32.dll", SetLastError=true)]
     static extern bool GetWindowRect(IntPtr hwnd, out RECT lpRect);
     
+    [DllImport("user32.dll", SetLastError=true)]
+    static extern bool GetClientRect(IntPtr hWnd,out RECT lpRect);
+    
     [DllImport("user32.dll")]
     static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
 
@@ -167,8 +169,7 @@ public class S_TransparentWindow : MonoBehaviour
     //安装钩子
     [DllImport("user32.dll")]
     private static extern IntPtr SetWindowsHookEx(int idHook, HookProc lpfn, IntPtr hMod, uint dwThreadId);
- 
- 
+
     //卸载钩子
     [DllImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
@@ -267,12 +268,8 @@ public class S_TransparentWindow : MonoBehaviour
         MARGINS margins = new MARGINS() { cxLeftWidth = -1 };
         // Set properties of the window
         // See: https://msdn.microsoft.com/en-us/library/windows/desktop/ms633591%28v=vs.85%29.aspx
-        //SetWindowLong(hwnd, GWL_STYLE, WS_POPUP | WS_VISIBLE);
-        uint windowStyle = GetWindowLong(hwnd,GWL_STYLE);
-        SetWindowLong(hwnd,-16, windowStyle & ~WS_BORDER & ~WS_CAPTION);
+        SetWindowLong(hwnd, GWL_STYLE, WS_POPUP | WS_VISIBLE);
         SetWindowTransparency(true);
-        // Extend the window into the client area
-        //See: https://msdn.microsoft.com/en-us/library/windows/desktop/aa969512%28v=vs.85%29.aspx
         DwmExtendFrameIntoClientArea(hwnd, ref margins);
         SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, Screen.currentResolution.width, Screen.currentResolution.height, SWP_SHOWWINDOW);
         //MessageBox(IntPtr.Zero ,(Screen.width + Screen.height).ToString(),"分辨率",0);
@@ -285,38 +282,67 @@ public class S_TransparentWindow : MonoBehaviour
         // SetLayeredWindowAttributes(hwnd, 0, (byte)(Opacity*255.0f), 0x00000001 | 0x00000002);
         // MARGINS margins = new MARGINS() { cxLeftWidth = -1 };
         // DwmExtendFrameIntoClientArea(hwnd, ref margins);
+        
         CreateTray();
     }
     
     private IntPtr FuncMouseHookProc(int nCode, IntPtr wParam, IntPtr lParam)
     {
         MouseHookStruct MyMouseHookStruct = (MouseHookStruct)Marshal.PtrToStructure(lParam, typeof(MouseHookStruct));
-
         int x = MyMouseHookStruct.pt.x;
         int y = MyMouseHookStruct.pt.y;
-        Vector3 pos = Vector3.one;
+        Vector3 pos = Vector3.zero;
         pos.x = x;
         pos.y = Screen.currentResolution.height - y;
+        pos.z = Input.mousePosition.z;
         MouseTrack.x = pos.x;
         MouseTrack.y = pos.y;
-        GetWindowRect(hwnd,out WindowRect);
-        MessageBox(hwnd, WindowRect.ToString(), "", 0);
-        if ( wParam == (IntPtr)WM_RBUTTONDOWN)
+        // if ( wParam == (IntPtr)WM_LBUTTONDOWN ||
+        //      wParam == (IntPtr)WM_RBUTTONDOWN ||
+        //      wParam == (IntPtr)WM_MBUTTONDOWN)
+        // if ( wParam == (IntPtr)WM_MBUTTONDOWN)
+        // {
+        //     GetClientRect(hwnd,out WindowRect);
+        //     MessageBox(hwnd, Input.mousePosition.ToString(), "", 0);
+        // }
         {
-            MessageBox(hwnd, WindowRect.ToString(), "", 0);
-            RaycastHit R_CursorHitResult = new RaycastHit();
-            var CurrentCursorPos = Camera.main.ViewportToWorldPoint(pos);
-            UnityEngine.Vector3 target = CurrentCursorPos +  Camera.main.transform.forward * 1000.0f;
-            if (Physics.Raycast(CurrentCursorPos, target, out R_CursorHitResult))
+            // var CurrentCursorPos = Camera.main.ScreenToWorldPoint(pos);
+            // UnityEngine.Vector3 target = CurrentCursorPos +  Camera.main.transform.forward * 500.0f;
+            // RaycastHit[] R_CursorHitResult = Physics.RaycastAll(CurrentCursorPos, target);
+            // //MessageBox(hwnd, CurrentCursorPos.ToString().ToString(), "", 0);
+            // //Debug.Log(CurrentCursorPos);
+            // if (R_CursorHitResult.Length > 0)
+            // {
+            //     SetWindowTransparency(false);
+            // }
+            // else
+            // {
+            //     {
+            //         SetWindowTransparency(true);
+            //     }
+            // }
+            
+            if (EventSystem.current)
             {
-                MessageBox(hwnd, pos.ToString(), "", 0);
-                //SetWindowTransparency(false);
+                var CurrentCursorPos = Camera.main.ScreenToWorldPoint(pos);
+                PointerEventData eventData = new PointerEventData(EventSystem.current);
+                //eventData.position = Input.mousePosition;
+                eventData.position = pos;
+                // 执行射线检测，查看指定位置是否有UI
+                List<RaycastResult> results = new List<RaycastResult>();
+                EventSystem.current.RaycastAll(eventData, results);
+                UnityEngine.Vector3 target = CurrentCursorPos + Camera.main.transform.forward * 500.0f;
+                RaycastHit[] ObjResults = Physics.RaycastAll(CurrentCursorPos, target);
+                if (ObjResults.Length > 0 || results.Count > 0)
+                { 
+                    SetWindowTransparency(false);
+                }
+                else
+                {
+                    SetWindowTransparency(true);
+                }
             }
-            else
-            {
-                //MessageBox(hwnd, "no", "", 0);
-                //SetWindowTransparency(true);
-            }
+            
         } 
         return CallNextHookEx(_hMouseHook, nCode, wParam, lParam);
     }
@@ -334,7 +360,7 @@ public class S_TransparentWindow : MonoBehaviour
     {
         // 设置窗口的穿透属性
         uint dwExStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
-        //dwExStyle |= WS_EX_TOOLWINDOW | WS_EX_TOPMOST ;
+        dwExStyle |= WS_EX_TOOLWINDOW | WS_EX_TOPMOST ;
         if (isTransparent)
         {
             dwExStyle |= WS_EX_TRANSPARENT | WS_EX_LAYERED;
@@ -353,6 +379,7 @@ public class S_TransparentWindow : MonoBehaviour
     {
         UnhookWindowsHookEx(_hMouseHook);
         _hMouseHook = (IntPtr)0;
+        SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 2, 2, SWP_SHOWWINDOW);
     }
 
     void Awake()

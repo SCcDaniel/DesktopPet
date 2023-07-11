@@ -49,7 +49,6 @@ namespace WindowTray
                 _notifyIcon.Icon = new System.Drawing.Icon(SystemIcons.Warning, iconSize, iconSize);
             else
                 _notifyIcon.Icon = CustomTrayIcon(iconPath, iconSize, iconSize);
-            _notifyIcon.ShowBalloonTip(2000);//托盘气泡显示时间
             _notifyIcon.ContextMenu = new System.Windows.Forms.ContextMenu();
             //右键菜单
             {
@@ -97,7 +96,10 @@ namespace WindowTray
             }
             Show();
             _notifyIcon.ShowBalloonTip(2500, "", "你好呀~", ToolTipIcon.None);
-            Form.ActiveForm.ShowInTaskbar = false;
+            
+            //这个注释掉,不知道为啥会影响到Hook钩子
+            //Form.ActiveForm.ShowInTaskbar = false;
+            
             //Form.FromHandle(hwnd).FindForm().ShowInTaskbar=false;
         }
         /// 设置程序托盘图标
