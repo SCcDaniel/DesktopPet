@@ -54,7 +54,6 @@ public class S_MaliOffineCompiler
         UE4 = 1,
     };
     public static ProcessClass proc = new ProcessClass();
-    public static EEnvironment ShaderEnvironment = EEnvironment.UE4;
     public static bool bOnlySpilling = true;
     public static EShaderType ShaderType = EShaderType.VertexShader;
     public static EShaderType ShaderTypeCache = EShaderType.VertexShader;
@@ -65,6 +64,7 @@ public class S_MaliOffineCompiler
     public static bool MaliocAutoExecute = false;
     private static bool bExecuting = false;
     private static S_Timer asyncCallbackTimer;
+    public static string HeaderCodeFilePath = UnityEngine.Application.streamingAssetsPath + "/Mali_offine_compiler/Plugins/HeaderCode.txt";
     public S_MaliOffineCompiler()
     {
         ShaderType = EShaderType.VertexShader;
@@ -103,9 +103,9 @@ public class S_MaliOffineCompiler
     static private void Execute(bool focus = false)
     {
         //if (GUIUtility.systemCopyBuffer == null)
-        if(Clipboard.GetDataObject() == null)
+        if(!Clipboard.ContainsText())
         {
-            S_DialogBox.DialogBox.SayAsync("粘贴板没有内容哦...");
+            S_DialogBox.DialogBox.SayAsync("粘贴板没有文字内容哦...");
             return;
         }
         //获取粘贴板内容
@@ -153,26 +153,25 @@ public class S_MaliOffineCompiler
                 return;
             }
             
-            //头部关键字获取判断
-            string HeaderStr = shaderCode.Remove(20);
-            if (!HeaderStr.Contains("#version ")&& !HeaderStr.Contains("SPIR-V"))
-            {
-                S_DialogBox.DialogBox.SayAsync("你都复制了些啥呀..." , 6000);
-                return;
-            }
+            // //头部关键字获取判断
+            // string HeaderStr = shaderCode.Remove(20);
+            // if (!HeaderStr.Contains("#version ")&& !HeaderStr.Contains("SPIR-V"))
+            // {
+            //     S_DialogBox.DialogBox.SayAsync("你都复制了些啥呀...我不懂欸..." , 6000);
+            //     return;
+            // }
 
-            if (ShaderEnvironment == EEnvironment.UE4)
+            //#define HLSLCC_DX11ClipSpace 1
+            StreamReader headerCodeReader = new StreamReader(HeaderCodeFilePath);
+            string headerCode = "";
+            string content = headerCodeReader.ReadLine();
+            while (content != null)
             {
-                for (int i = 0; i < shaderCode.Length; i++)
-                {
-                    if (shaderCode[i] == '\n')
-                    {
-                        string newLine = "\n" + "#define HLSLCC_DX11ClipSpace 1" + "\n";
-                        shaderCode = shaderCode.Insert(i + 1, newLine);
-                        break;
-                    }
-                }
+                headerCode += content + "\n";
+                content = headerCodeReader.ReadLine();
             }
+            shaderCode = headerCode + "\n" + shaderCode;
+            headerCodeReader.Close();
  
             string cmdString = UnityEngine.Application.streamingAssetsPath + "/Mali_offine_compiler/Plugins/malioc.exe";
             string shaderCacheFile = shaderCacheFilePath;
@@ -239,7 +238,7 @@ public class S_MaliOffineCompiler
             }
 
             ResultOut = result;
-            if (error.Length > 0)
+            if (error.Length > 0 || ResultOut.Contains("ERROR",StringComparison.InvariantCultureIgnoreCase))
             {
                 if(ResultOut.Length > 0)
                     ResultOut += "\n";
@@ -249,7 +248,7 @@ public class S_MaliOffineCompiler
             }
             else if ( ResultOut.Length < 10 )
             {
-                ResultOut = "没有输出...好像有什么不太对劲，\n可能是参数不对，\n可以把[只显示Spilling]关掉看看详细说明。";
+                ResultOut = "没有输出..?好像有什么不太对劲，\n可能是参数不对，\n可以把[只显示Spilling]关掉看看详细说明。";
                 S_DialogBox.DialogBox.SayAsync(ResultOut,1000000.0f);
             }
             else

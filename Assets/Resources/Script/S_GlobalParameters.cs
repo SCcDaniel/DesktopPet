@@ -2,14 +2,24 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Timers;
+using TMPro;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
 public class S_GlobalParameters : MonoBehaviour
 {
+    public GameObject HeaderCodeWidget;
+    public TMP_InputField HeaderCodeInput;
     //Base
     private float currentTime = 0;
+
+    private void Start()
+    {
+        HeaderCodeWidget.SetActive(false);
+    }
+
     private void Update()
     {
         currentTime += Time.deltaTime;
@@ -20,16 +30,29 @@ public class S_GlobalParameters : MonoBehaviour
         }
     }
 
-
-    //Malioc
-    public void Malioc_EnvironmentDropdown(int optionIndex)
+    public void HeadCodeSupplement()
     {
-        if (optionIndex == 0)
+        if (HeaderCodeWidget)
         {
-            S_MaliOffineCompiler.ShaderEnvironment = S_MaliOffineCompiler.EEnvironment.UE4;
-            S_MaliOffineCompiler.currentCode = "";
+            HeaderCodeWidget.SetActive(true);
+            if (HeaderCodeInput)
+            {
+                StreamReader reader = new StreamReader(S_MaliOffineCompiler.HeaderCodeFilePath);
+                HeaderCodeInput.text = reader.ReadToEnd();
+                reader.Close();
+            }
         }
     }
+
+    public void HeadCodeEnter()
+    {
+        StreamWriter writer = new StreamWriter(S_MaliOffineCompiler.HeaderCodeFilePath);
+        writer.Write(HeaderCodeInput.text);
+        HeaderCodeWidget.SetActive(false);
+        writer.Close();
+    }
+
+    //Malioc
     public void Malioc_OnlySpillingVisiliable(int bChecked)
     {
         S_MaliOffineCompiler.bOnlySpilling = Convert.ToBoolean(bChecked);

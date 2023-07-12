@@ -1,0 +1,2 @@
+#define HLSLCC_DX11ClipSpace 1
+#define CODE_TEST 1
