@@ -15,7 +15,7 @@ public class S_GlobalParameters : MonoBehaviour
         currentTime += Time.deltaTime;
         if (currentTime >= 1.5f && S_MaliOffineCompiler.MaliocAutoExecute)
         {
-            S_MaliOffineCompiler.Execute();
+            S_MaliOffineCompiler.ExecuteAsync();
             currentTime = 0.0f;
         }
     }
@@ -76,7 +76,7 @@ public class S_GlobalParameters : MonoBehaviour
     
     public void Malioc_Execute()
     {
-        S_MaliOffineCompiler.Execute(true);
+        S_MaliOffineCompiler.ExecuteAsyncFocus();
     }
 
     //Unity Speech

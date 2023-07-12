@@ -6,6 +6,8 @@ using System.Threading;
 using Unity.Collections;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
+using System.Threading;
+using System.Windows.Forms;
 
 public class ProcessClass
 {
@@ -61,6 +63,8 @@ public class S_MaliOffineCompiler
     public static string ResultOut = "" ;
     public static System.Timers.Timer UpdateTimer;
     public static bool MaliocAutoExecute = false;
+    private static bool bExecuting = false;
+    private static S_Timer asyncCallbackTimer;
     public S_MaliOffineCompiler()
     {
         ShaderType = EShaderType.VertexShader;
@@ -68,32 +72,57 @@ public class S_MaliOffineCompiler
         //
     }
 
-    static public void AutoExecute(object sender, System.Timers.ElapsedEventArgs e)
+    static public void ExecuteAsyncFocus()
+    {
+        if (bExecuting)
+            return;
+        bExecuting = true;
+        Thread execThread = new Thread(ExecuteThreadRunFocus);
+        execThread.Start();
+    }
+    static private void ExecuteThreadRunFocus()
+    {
+        Execute(true);
+        bExecuting = false;
+    }
+    
+    static public void ExecuteAsync()
+    {
+        if (bExecuting)
+            return;
+        bExecuting = true;
+        Thread execThread = new Thread(ExecuteThreadRun);
+        execThread.Start();
+    }
+    static private void ExecuteThreadRun()
     {
         Execute();
-        //Debug.Log("Auto execute");
+        bExecuting = false;
     }
 
-    static public void Execute(bool focus = false)
+    static private void Execute(bool focus = false)
     {
-        if (GUIUtility.systemCopyBuffer == null)
+        //if (GUIUtility.systemCopyBuffer == null)
+        if(Clipboard.GetDataObject() == null)
         {
-            S_DialogBox.DialogBox.Say("粘贴板没有内容哦...");
+            S_DialogBox.DialogBox.SayAsync("粘贴板没有内容哦...");
             return;
         }
         //获取粘贴板内容
-        //IDataObject clipboardData = Clipboard.GetDataObject();
-        //if (clipboardData.GetDataPresent(DataFormats.Text))
+        string shaderCode;
+        //shaderCode = GUIUtility.systemCopyBuffer;
+        IDataObject clipboardData = Clipboard.GetDataObject();
+        if (clipboardData.GetDataPresent(DataFormats.Text))
         {
-            //object obj = clipboardData.GetData(DataFormats.Text);
-            //if (obj == null)
-            //{
-            //    return;
-            //}
-            //shaderCode = (string)obj;
+            object obj = clipboardData.GetData(DataFormats.Text);
+            if (obj == null)
+            {
+                return;
+            }
+            shaderCode = (string)obj;
             if (!focus)
             {
-                if (S_DialogBox.DialogBox.CopyStateString.Contains(GUIUtility.systemCopyBuffer))
+                if (S_DialogBox.DialogBox.CopyStateString.Contains(shaderCode))
                 {
                     return;
                 }
@@ -102,24 +131,25 @@ public class S_MaliOffineCompiler
                     S_DialogBox.DialogBox.CopyStateString = "";
                 }
             }
-
-            string shaderCode;
-            string shaderCacheFilePath =UnityEngine.Application.streamingAssetsPath + "/Mali_offine_compiler/Plugins/ShaderCache/ShaderCache";
-            shaderCode = GUIUtility.systemCopyBuffer;
             
+            string shaderCacheFilePath =UnityEngine.Application.streamingAssetsPath + "/Mali_offine_compiler/Plugins/ShaderCache/ShaderCache";
 
-            //当前代码和上传相同,不执行
-            if (currentCode.Equals(shaderCode))
+            if (!focus)
             {
-                //S_DialogBox.DialogBox.Say("我不会处理相同内容的啦...");
-                return;
+                //当前代码和上传相同,不执行
+                if (currentCode.Equals(shaderCode))
+                {
+                    //S_DialogBox.DialogBox.SayAsync("我不会处理相同内容的啦...");
+                    return;
+                }
             }
+
             currentCode = shaderCode;
 
             //内容太少,不执行
             if ( shaderCode.Length <=20)
             {
-                S_DialogBox.DialogBox.Say("你在小看我吗!!内容不对啊!" , 8000);
+                S_DialogBox.DialogBox.SayAsync("你在小看我吗!!内容不对啊!" , 8000);
                 return;
             }
             
@@ -127,7 +157,7 @@ public class S_MaliOffineCompiler
             string HeaderStr = shaderCode.Remove(20);
             if (!HeaderStr.Contains("#version ")&& !HeaderStr.Contains("SPIR-V"))
             {
-                S_DialogBox.DialogBox.Say("你都复制了些啥呀..." , 6000);
+                S_DialogBox.DialogBox.SayAsync("你都复制了些啥呀..." , 6000);
                 return;
             }
 
@@ -214,17 +244,17 @@ public class S_MaliOffineCompiler
                 if(ResultOut.Length > 0)
                     ResultOut += "\n";
                 ResultOut += error;
-                S_DialogBox.DialogBox.Say("好像有错误哦\n" + ResultOut,1000000.0f);
+                S_DialogBox.DialogBox.SayAsync("好像有错误哦\n" + ResultOut,1000000.0f);
                 currentCode = "";
             }
             else if ( ResultOut.Length < 10 )
             {
                 ResultOut = "没有输出...好像有什么不太对劲，\n可能是参数不对，\n可以把[只显示Spilling]关掉看看详细说明。";
-                S_DialogBox.DialogBox.Say(ResultOut,1000000.0f);
+                S_DialogBox.DialogBox.SayAsync(ResultOut,1000000.0f);
             }
             else
             {
-                S_DialogBox.DialogBox.Say("有结果啦..\n" + ResultOut,1000000.0f);
+                S_DialogBox.DialogBox.SayAsync("有结果啦..\n" + ResultOut,1000000.0f);
             }
             //output logs生成Logs
             //Debug.Log(ResultOut);

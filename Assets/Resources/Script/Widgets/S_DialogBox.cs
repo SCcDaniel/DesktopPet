@@ -21,6 +21,8 @@ public class S_DialogBox : MonoBehaviour
     private Vector2 defaultSize = Vector3.zero;
     public Vector3 UIOffset = Vector3.zero;
 
+    private string AsyncSayText;
+    private bool bUseSayText = false;
     public string CopyStateString = "";
     // Start is called before the first frame update
     private bool bMoveUI = false;
@@ -103,6 +105,11 @@ public class S_DialogBox : MonoBehaviour
     {
         UpdateVisiable();
         UpdatePosByMainCharacter();
+        if (bUseSayText && !GUIText.text.Equals(AsyncSayText))
+        {
+            GUIText.text = AsyncSayText;
+            bUseSayText = false;
+        }
     }
 
     public void SetHidden()
@@ -163,6 +170,29 @@ public class S_DialogBox : MonoBehaviour
     {
         //Debug.Log("Say.."); 
         GUIText.text = msg;
+        bHide = false;
+        if (AutoHideTimer == null)
+        {
+            AutoHideTimer = new Timer(); 
+            AutoHideTimer.Enabled = true;
+            AutoHideTimer.Elapsed += (sender, args) =>
+            {
+                bHide = true;
+            };
+        }
+        else
+        {
+            AutoHideTimer.Stop();
+        }
+        AutoHideTimer.Interval = Time;
+        AutoHideTimer.Start(); 
+    }
+        
+    public void SayAsync(string msg ,float Time = 15000)
+    {
+        //Debug.Log("Say.."); 
+        AsyncSayText = msg;
+        bUseSayText = true;
         bHide = false;
         if (AutoHideTimer == null)
         {

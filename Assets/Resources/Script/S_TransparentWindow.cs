@@ -1,15 +1,12 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using UnityEngine.EventSystems;
 using Debug = UnityEngine.Debug;
 #if UNITY_STANDALONE_WIN
-using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using WindowTray;
-
 #endif
 
 public class S_TransparentWindow : MonoBehaviour
@@ -204,12 +201,9 @@ public class S_TransparentWindow : MonoBehaviour
     private const int SWP_FRAMECHANGED = 0x0020;
     private const int SWP_SHOWWINDOW = 0x0040;
     //
-    // Windows NT/2000/XP: Installs a hook procedure that monitors low-level mouse input events.
-    private const int WH_MOUSE_LL       = 14;
-
-    private const int WH_MOUSE = 7;
-    // Windows NT/2000/XP: Installs a hook procedure that monitors low-level keyboard  input events.
-    private const int WH_KEYBOARD_LL    = 13;
+    private const int WH_MOUSE_LL = 14;
+    private const int WH_MOUSE = 7;         
+    private const int WH_KEYBOARD_LL = 13;
     //鼠标事件映射
     private const int WM_MOUSEMOVE = 0x200;
     private const int WM_LBUTTONDOWN = 0x201;
@@ -231,14 +225,12 @@ public class S_TransparentWindow : MonoBehaviour
         public int time;
         public int dwExtraInfo;
     }
-    
     [StructLayout(LayoutKind.Sequential)]
     public class POINT
     {
         public int x;
         public int y;
     }
-
     [StructLayout(LayoutKind.Sequential)]
     public class MouseHookStruct
     {
@@ -250,40 +242,35 @@ public class S_TransparentWindow : MonoBehaviour
     static IntPtr _hMouseHook;
     private delegate IntPtr HookProc(int nCode, IntPtr wParam, IntPtr lParam);
     private HookProc MouseHookProc;
-
     static private Vector2 MouseTrack = new Vector2();
     static private RECT WindowRect = new RECT();
+    private static bool bIsTransparent = false;
     //托盘
     S_WindowTray Tray;
-
     private void InitWindowStyle()
     {
-        if(hwnd == null)
+        hwnd = FindWindow(null,productName);
+        if (hwnd == null)
         {
-            MessageBox(IntPtr.Zero ,"查找Unity窗口出错...","错误",0);
+            MessageBox(IntPtr.Zero, "查找Unity窗口出错...", "错误", 0);
             return;
         }
-
-        //Camera.main.depthTextureMode = DepthTextureMode.Depth;
         MARGINS margins = new MARGINS() { cxLeftWidth = -1 };
         // Set properties of the window
-        // See: https://msdn.microsoft.com/en-us/library/windows/desktop/ms633591%28v=vs.85%29.aspx
         SetWindowLong(hwnd, GWL_STYLE, WS_POPUP | WS_VISIBLE);
         SetWindowTransparency(true);
         DwmExtendFrameIntoClientArea(hwnd, ref margins);
         SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, Screen.currentResolution.width, Screen.currentResolution.height, SWP_SHOWWINDOW);
-        //MessageBox(IntPtr.Zero ,(Screen.width + Screen.height).ToString(),"分辨率",0);
-
-        // //窗口样式
-        // uint windowStyle = GetWindowLong(hwnd,GWL_STYLE);
-        // uint windowStyleEx = GetWindowLong(hwnd,GWL_EXSTYLE);
-        // SetWindowLong(hwnd,-16, windowStyle & ~WS_BORDER & ~WS_CAPTION);
-        // SetWindowLong(hwnd,-20, windowStyleEx | WS_EX_LAYERED | WS_EX_TOOLWINDOW );
         // SetLayeredWindowAttributes(hwnd, 0, (byte)(Opacity*255.0f), 0x00000001 | 0x00000002);
-        // MARGINS margins = new MARGINS() { cxLeftWidth = -1 };
-        // DwmExtendFrameIntoClientArea(hwnd, ref margins);
-        
         CreateTray();
+        
+        //安装全局钩子
+        using (Process curProcess = Process.GetCurrentProcess())
+        using (ProcessModule curModule = curProcess.MainModule)
+        {
+            MouseHookProc = new HookProc(FuncMouseHookProc);
+            _hMouseHook = SetWindowsHookEx(WH_MOUSE_LL,MouseHookProc,GetModuleHandle(curModule.ModuleName),0); 
+        }
     }
     
     private IntPtr FuncMouseHookProc(int nCode, IntPtr wParam, IntPtr lParam)
@@ -297,31 +284,7 @@ public class S_TransparentWindow : MonoBehaviour
         pos.z = Input.mousePosition.z;
         MouseTrack.x = pos.x;
         MouseTrack.y = pos.y;
-        // if ( wParam == (IntPtr)WM_LBUTTONDOWN ||
-        //      wParam == (IntPtr)WM_RBUTTONDOWN ||
-        //      wParam == (IntPtr)WM_MBUTTONDOWN)
-        // if ( wParam == (IntPtr)WM_MBUTTONDOWN)
-        // {
-        //     GetClientRect(hwnd,out WindowRect);
-        //     MessageBox(hwnd, Input.mousePosition.ToString(), "", 0);
-        // }
         {
-            // var CurrentCursorPos = Camera.main.ScreenToWorldPoint(pos);
-            // UnityEngine.Vector3 target = CurrentCursorPos +  Camera.main.transform.forward * 500.0f;
-            // RaycastHit[] R_CursorHitResult = Physics.RaycastAll(CurrentCursorPos, target);
-            // //MessageBox(hwnd, CurrentCursorPos.ToString().ToString(), "", 0);
-            // //Debug.Log(CurrentCursorPos);
-            // if (R_CursorHitResult.Length > 0)
-            // {
-            //     SetWindowTransparency(false);
-            // }
-            // else
-            // {
-            //     {
-            //         SetWindowTransparency(true);
-            //     }
-            // }
-            
             if (EventSystem.current)
             {
                 var CurrentCursorPos = Camera.main.ScreenToWorldPoint(pos);
@@ -361,77 +324,41 @@ public class S_TransparentWindow : MonoBehaviour
         // 设置窗口的穿透属性
         uint dwExStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
         dwExStyle |= WS_EX_TOOLWINDOW | WS_EX_TOPMOST ;
-        if (isTransparent)
+        if (isTransparent && !bIsTransparent)
         {
+            bIsTransparent = true;
             dwExStyle |= WS_EX_TRANSPARENT | WS_EX_LAYERED;
             //dwExStyle |= WS_EX_LAYERED;
         }
-        else
+        else if(!isTransparent && bIsTransparent)
         {
             dwExStyle &= ~WS_EX_TRANSPARENT;
+            bIsTransparent = false;
         }
         SetWindowLong(hwnd, GWL_EXSTYLE, dwExStyle);
     }
-    
-#endif
 
-    private void OnDestroy()
+    void Destroy()
     {
         UnhookWindowsHookEx(_hMouseHook);
         _hMouseHook = (IntPtr)0;
         SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 2, 2, SWP_SHOWWINDOW);
     }
 
+#endif
+
+    private void OnDestroy()
+    {
+        Destroy();
+    }
+
     void Awake()
     {
-        hwnd = FindWindow(null,productName);
+        Application.runInBackground = true;
         CameraComp = Camera.main;
-#if UNITY_EDITOR
-#else
+#if !UNITY_EDITOR
         InitWindowStyle();
 #endif
     }
-
-    private void Start()
-    {
-        Application.runInBackground = true;
-        //安装全局钩子
-        using (Process curProcess = Process.GetCurrentProcess())
-        using (ProcessModule curModule = curProcess.MainModule)
-        {
-            MouseHookProc = new HookProc(FuncMouseHookProc);
-            _hMouseHook = SetWindowsHookEx(WH_MOUSE_LL,MouseHookProc,GetModuleHandle(curModule.ModuleName),0); 
-        }
-    }
-
-    // 鼠标点击事件处理
-    private void Update()
-    {
-// #if UNITY_EDITOR
-// #else
-//         // 使用EventSystem检测点击位置是否有游戏元素
-//         if (EventSystem.current)
-//         {
-//             PointerEventData eventData = new PointerEventData(EventSystem.current);
-//             eventData.position = Input.mousePosition;
-//         
-//             // 执行射线检测，查看指定位置是否有UI
-//             List<RaycastResult> results = new List<RaycastResult>();
-//             EventSystem.current.RaycastAll(eventData, results);
-//             //
-//             var CurrentCursorPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-//             UnityEngine.Vector3 target = CurrentCursorPos + Camera.main.transform.forward * 1000.0f;
-//             RaycastHit R_CursorHitResult = new RaycastHit();
-//             if (Physics.Raycast(CurrentCursorPos, target, out R_CursorHitResult) || results.Count > 0)
-//             {
-//                 SetWindowTransparency(false);
-//             }
-//             else
-//             {
-//                 SetWindowTransparency(true);
-//             }
-//
-//         }
-// #endif
-    }
+    
 }
