@@ -62,7 +62,6 @@ public class S_MaliOffineCompiler
     public static string ResultOut = "" ;
     public static System.Timers.Timer UpdateTimer;
     public static bool MaliocAutoExecute = false;
-    private static bool bExecuting = false;
     private static S_Timer asyncCallbackTimer;
     public static string HeaderCodeFilePath = UnityEngine.Application.streamingAssetsPath + "/Mali_offine_compiler/Plugins/HeaderCode.txt";
     public S_MaliOffineCompiler()
@@ -74,30 +73,24 @@ public class S_MaliOffineCompiler
 
     static public void ExecuteAsyncFocus()
     {
-        if (bExecuting)
-            return;
-        bExecuting = true;
         Thread execThread = new Thread(ExecuteThreadRunFocus);
         execThread.Start();
+        S_Character.character.Smile();
     }
     static private void ExecuteThreadRunFocus()
     {
         Execute(true);
-        bExecuting = false;
     }
     
     static public void ExecuteAsync()
     {
-        if (bExecuting)
-            return;
-        bExecuting = true;
         Thread execThread = new Thread(ExecuteThreadRun);
         execThread.Start();
+        S_Character.character.Smile();
     }
     static private void ExecuteThreadRun()
     {
         Execute();
-        bExecuting = false;
     }
 
     static private void Execute(bool focus = false)
@@ -170,9 +163,16 @@ public class S_MaliOffineCompiler
                 headerCode += content + "\n";
                 content = headerCodeReader.ReadLine();
             }
-            shaderCode = headerCode + "\n" + shaderCode;
+
+            string[] sss = shaderCode.Split("\n");
+            shaderCode = "";
+            for (int i = 0; i < sss.Length; i++)
+            {
+                shaderCode += sss[i] + "\n";
+                if(sss[i].Contains("#version"))
+                    shaderCode += "\n" +headerCode + "\n";
+            }
             headerCodeReader.Close();
- 
             string cmdString = UnityEngine.Application.streamingAssetsPath + "/Mali_offine_compiler/Plugins/malioc.exe";
             string shaderCacheFile = shaderCacheFilePath;
             if (Renderer == ERenderer.OpenGLES)
@@ -214,30 +214,46 @@ public class S_MaliOffineCompiler
             proc.RunCmd(cmdString, ref result, ref error);
             
             //只显示Spilling？
-            if (bOnlySpilling)
+            string onlyResult = "";
+            string qingxu = "";
             {
                 string[] arr = result.Split(new string[] { "\n" }, StringSplitOptions.None);
-                result = "";
+                //result = "";
                 for (int i = 0; i < arr.Length; i++)
                 {
                     //根据空格分割，并去掉多余的空格。
                     if (arr[i].Contains(" variant"))
                     {
-                        result += "-------------\n";
-                        result += arr[i];
+                        onlyResult += "-------------\n";
+                        onlyResult += arr[i];
                     }
                     if (arr[i].Contains("Stack spilling"))
                     {
-                        if (result.Length <= 1)
+                        if (onlyResult.Length <= 1)
                         {
-                            result = "-------------\n";
+                            onlyResult = "-------------\n";
                         }
-                        result += arr[i];
+                        onlyResult += arr[i];
+                        {
+                            string []onlyss = arr[i].Split(":");
+                            if (onlyss[1].Contains("false"))
+                            {
+                                qingxu = "你别高兴太早!!";
+                            }
+                            else
+                            {
+                                qingxu = "再加把劲呗?";
+                            }
+                        }
                     }
                 }
             }
+            
+            if (bOnlySpilling)
+                ResultOut = onlyResult;
 
-            ResultOut = result;
+            ResultOut = qingxu +"\n"+ ResultOut;
+            
             if (error.Length > 0 || ResultOut.Contains("ERROR",StringComparison.InvariantCultureIgnoreCase))
             {
                 if(ResultOut.Length > 0)

@@ -15,6 +15,7 @@ public enum MenuItemType
     OpenNewMenu,
     CheckBox,
     DropDownBox,
+    InputLine,
 }
 
 [System.Serializable]
@@ -42,6 +43,8 @@ public class S_ContextMenu : MonoBehaviour,IPointerEnterHandler,IPointerExitHand
 
     public GameObject Prefab_DropDown;
     
+    public GameObject Prefab_InputLine;
+    
     //该菜单下的所有内容
     private List<GameObject> _menuChildren = new List<GameObject>();
 
@@ -61,6 +64,9 @@ public class S_ContextMenu : MonoBehaviour,IPointerEnterHandler,IPointerExitHand
     public List<ItemActionInt> _menuItems_event_oneParam_int =  new List<ItemActionInt>();
     
     [HideInInspector]
+    public List<ItemActionString> _menuItems_event_oneParam_string =  new List<ItemActionString>();
+    
+    [HideInInspector]
     public List<bool> _menuItems_checkBox= new List<bool>();
     
     [HideInInspector]
@@ -68,6 +74,9 @@ public class S_ContextMenu : MonoBehaviour,IPointerEnterHandler,IPointerExitHand
 
     [HideInInspector]
     public List<string> _menuItems_dropDown= new List<string>();
+    
+    [HideInInspector]
+    public List<string> _menuItems_Inputline= new List<string>();
     
     public Dictionary<int,GameObject> _menus = new Dictionary<int,GameObject>();
     
@@ -126,6 +135,9 @@ public class S_ContextMenu : MonoBehaviour,IPointerEnterHandler,IPointerExitHand
                 case MenuItemType.DropDownBox:
                     obj = Instantiate(Prefab_DropDown,parent.transform);
                     break;
+                case MenuItemType.InputLine:
+                    obj = Instantiate(Prefab_InputLine,parent.transform);
+                    break;
             }
             _menuChildren.Add(obj);
             ui_text = obj.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
@@ -145,6 +157,19 @@ public class S_ContextMenu : MonoBehaviour,IPointerEnterHandler,IPointerExitHand
                 {
                     dropdown.onValueChanged.AddListener(_menuItems_event_oneParam_int[i].Invoke);
                     _menuItems_event_oneParam_int[i].Invoke(dropdown.value);
+                }
+            }
+            //InputLine
+            if (_menuItems_type[i] == MenuItemType.InputLine)
+            {
+                var inputline = obj.GetComponent<TMP_InputField>();
+                inputline.text = _menuItems_Inputline[i]; 
+                //_menuItems_Inputline
+                if (_menuItems_event_oneParam_string[i] != null)
+                {
+                    _menuItems_event_oneParam_string[i].Invoke(inputline.text);
+                    ItemActionString eventStr = _menuItems_event_oneParam_string[i];
+                    inputline.onSubmit.AddListener( _menuItems_event_oneParam_string[i].Invoke);
                 }
             }
             //button event

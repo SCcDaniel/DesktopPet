@@ -6,6 +6,7 @@ using System.IO;
 using System.Timers;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Networking;
 using Debug = UnityEngine.Debug;
 
 public class S_GlobalParameters : MonoBehaviour
@@ -50,6 +51,53 @@ public class S_GlobalParameters : MonoBehaviour
         writer.Write(HeaderCodeInput.text);
         HeaderCodeWidget.SetActive(false);
         writer.Close();
+    }
+
+    public void SetChatGPTAPIKey(string key)
+    {
+        S_ChatGPT.SetAPIKey(key);
+        //Debug.Log("123123123123123:::" + key);
+    }
+
+    public void SetChatGPTAPIUrl(string url)
+    {
+        S_ChatGPT.SetAPIUrl(url);
+    }
+    
+    public void SendMsgToChatGPT(string inMsg)
+    {
+        //GameObject gpt = new GameObject("Chat");
+        this.gameObject.AddComponent<S_ChatGPT>();
+        // string jsonBody = "{\"prompt\":\"" + inMsg + "\", \"max_tokens\": 50}";
+        // using (UnityWebRequest request = new UnityWebRequest(S_ChatGPT.GetAPIUrl(), "POST"))
+        // {
+        //     // 设置请求头
+        //     request.SetRequestHeader("Content-Type", "application/json");
+        //     request.SetRequestHeader("Authorization", "Bearer " + S_ChatGPT.GetAPIKey());
+        //
+        //     // 设置请求体
+        //     byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonBody);
+        //     request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        //     request.downloadHandler = new DownloadHandlerBuffer();
+        //
+        //     // 发送请求
+        //     yield return request.SendWebRequest();
+        //
+        //     // 处理响应
+        //     if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
+        //     {
+        //         string msg = "Error: " + request.error;
+        //         Debug.LogError(msg);
+        //         S_DialogBox.DialogBox.Say(msg);
+        //     }
+        //     else
+        //     {
+        //         string msg = request.downloadHandler.text;
+        //         Debug.Log("Received: " + msg);
+        //         S_DialogBox.DialogBox.Say(msg);
+        //         // 在此处处理API响应，例如解析JSON并显示聊天回复
+        //     }
+        // }
     }
 
     //Malioc

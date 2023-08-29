@@ -35,7 +35,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -151,13 +151,16 @@ MonoBehaviour:
   Prefab_OpenNewMenu: {fileID: 5417639376400010289, guid: 840dc81372947da44b5bdc59462bc6d1, type: 3}
   Prefab_CheckBox: {fileID: 5417639376400010289, guid: 00c9daf9f823a8c4a886362a54ffc42e, type: 3}
   Prefab_DropDown: {fileID: 6307209154100999152, guid: 32e1e97b5fbaf1a419c2efb6e0c59d2b, type: 3}
+  Prefab_InputLine: {fileID: 3707042853050167013, guid: 33ac83b32adacb44a889c919f295bb14, type: 3}
   _menuItems_name: []
   _menuItems_type: 
   _menuItems_parentIndex: 
   _menuItems_event: []
   _menuItems_event_oneParam_int: []
+  _menuItems_event_oneParam_string: []
   _menuItems_checkBox: 
   _menuItems_checkBoxCanDisable: 
   _menuItems_dropDown: []
+  _menuItems_Inputline: []
   FromOpenNewMenuButton: {fileID: 0}
   bPointState: 1

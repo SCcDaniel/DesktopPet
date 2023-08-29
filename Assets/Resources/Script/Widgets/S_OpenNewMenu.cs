@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Timers;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -19,14 +20,14 @@ public class S_OpenNewMenu : MonoBehaviour,IPointerEnterHandler,IPointerExitHand
     private void Start()
     {
         rectTrans = GetComponent<RectTransform>();
-        Timer tt = new Timer(1500);
-        tt.Enabled = true;
-        tt.AutoReset = false;
-        tt.Elapsed += (sender, args) =>
+        S_OpenNewMenu [] menus = Resources.FindObjectsOfTypeAll<S_OpenNewMenu>();
+        foreach (var obj in menus)
         {
-            SameLevelMenuObjects.AddRange(FindObjectsOfType<S_OpenNewMenu>());
-        };
-        tt.Start();
+            if (obj.MenuLevel == this.MenuLevel && obj != this)
+            {
+                SameLevelMenuObjects.Add(obj);
+            }
+        }
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -35,7 +36,8 @@ public class S_OpenNewMenu : MonoBehaviour,IPointerEnterHandler,IPointerExitHand
         {
             foreach (var i in SameLevelMenuObjects)
             {
-                i.NewMenuObject.SetActive(false);
+                if( i.NewMenuObject &&  i.NewMenuObject.activeSelf)
+                    i.NewMenuObject.SetActive(false);
             }
             bPointState = true;
             if (subMenu == null)

@@ -1,27 +1,3 @@
-Microsoft Windows [�汾 10.0.19044.3086]
-(c) Microsoft Corporation����������Ȩ����
-
-D:\Unity\DesktopPet>chcp 65001
-Active code page: 65001
-
-D:\Unity\DesktopPet>D:/Unity/DesktopPet/Assets/StreamingAssets/Mali_offine_compiler/Plugins/malioc.exe D:/Unity/DesktopPet/Assets/StreamingAssets/Mali_offine_compiler/Plugins/ShaderCache/ShaderCache.vert
-Mali Offline Compiler v7.5.0 (Build 30e352)
-Copyright 2007-2022 Arm Limited, all rights reserved
-
-Configuration
-=============
-
-Hardware: Mali-G710 r0p0
-Architecture: Valhall
-Driver: r36p0-00rel0
-Shader type: OpenGL ES Vertex
-
-Compiler messages
-=================
-
-ERROR: 0:3: L0001: Typename expected, found 'aaaaaaaaaaaaaaaaaaaaaaaaassssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss'
-ERROR: 0:4: L0001: Expected identifier, found ''
-
-Compilation failed.
-
-D:\Unity\DesktopPet>
+你别高兴太早!!
+-------------
+Stack spilling: false

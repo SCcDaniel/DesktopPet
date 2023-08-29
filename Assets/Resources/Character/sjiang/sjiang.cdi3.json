@@ -32,6 +32,11 @@
 			"Name": "EyeL Smile"
 		},
 		{
+			"Id": "Param2",
+			"GroupId": "",
+			"Name": "闭眼微笑"
+		},
+		{
 			"Id": "ParamEyeRSmile",
 			"GroupId": "",
 			"Name": "EyeR Smile"

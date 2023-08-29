@@ -20,7 +20,9 @@ public class S_Inspector_ContextMenu : Editor
     private SerializedProperty _menuItems_checkBox_Seri;
     private SerializedProperty _menuItems_checkBoxCanDisable_Seri;
     private SerializedProperty _menuItems_dropDown_Seri;
+    private SerializedProperty _menuItems_inputLine_Seri;
     private SerializedProperty _menuItems_event_oneParam_int_Seri;
+    private SerializedProperty _menuItems_event_oneParam_string_Seri;
     private List<bool> _menuItemOpen= new List<bool>();
     private List<bool> _menuItemIsUseClickEvent= new List<bool>();
     private void OnEnable()
@@ -41,7 +43,9 @@ public class S_Inspector_ContextMenu : Editor
         _menuItems_checkBox_Seri = serializedObject.FindProperty("_menuItems_checkBox");
         _menuItems_checkBoxCanDisable_Seri = serializedObject.FindProperty("_menuItems_checkBoxCanDisable");
         _menuItems_dropDown_Seri = serializedObject.FindProperty("_menuItems_dropDown");
+        _menuItems_inputLine_Seri = serializedObject.FindProperty("_menuItems_inputLine");
         _menuItems_event_oneParam_int_Seri = serializedObject.FindProperty("_menuItems_event_oneParam_int");
+        _menuItems_event_oneParam_string_Seri= serializedObject.FindProperty("_menuItems_event_oneParam_string");
 
         serializedObject.Update();
         //DrawDefaultInspector();
@@ -57,7 +61,9 @@ public class S_Inspector_ContextMenu : Editor
             _contextMenu._menuItems_checkBox.Add(false);
             _contextMenu._menuItems_checkBoxCanDisable.Add(true);
             _contextMenu._menuItems_dropDown.Add("");
+            _contextMenu._menuItems_Inputline.Add("");
             _contextMenu._menuItems_event_oneParam_int.Add(new ItemActionInt());
+            _contextMenu._menuItems_event_oneParam_string.Add(new ItemActionString());
         }
         if (GUILayout.Button(" - "))
         {
@@ -69,7 +75,9 @@ public class S_Inspector_ContextMenu : Editor
                 _contextMenu._menuItems_parentIndex.RemoveAt(_contextMenu._menuItems_parentIndex.Count - 1);
                 _contextMenu._menuItems_checkBox.RemoveAt(_contextMenu._menuItems_checkBox.Count - 1);
                 _contextMenu._menuItems_dropDown.RemoveAt(_contextMenu._menuItems_dropDown.Count - 1);
+                _contextMenu._menuItems_Inputline.RemoveAt(_contextMenu._menuItems_Inputline.Count - 1);
                 _contextMenu._menuItems_event_oneParam_int.RemoveAt(_contextMenu._menuItems_event_oneParam_int.Count - 1);
+                _contextMenu._menuItems_event_oneParam_string.RemoveAt(_contextMenu._menuItems_event_oneParam_string.Count - 1);
                 _contextMenu._menuItems_checkBoxCanDisable.RemoveAt(_contextMenu._menuItems_checkBoxCanDisable.Count - 1);
             }
         }
@@ -115,9 +123,19 @@ public class S_Inspector_ContextMenu : Editor
                 _contextMenu._menuItems_dropDown.Add("");
                 serializedObject.Update();
             }
+            if (_contextMenu._menuItems_Inputline.Count <= i)
+            {
+                _contextMenu._menuItems_Inputline.Add("");
+                serializedObject.Update();
+            }
             if (_contextMenu._menuItems_event_oneParam_int.Count <= i)
             {
                 _contextMenu._menuItems_event_oneParam_int.Add(new ItemActionInt());
+                serializedObject.Update();
+            }
+            if (_contextMenu._menuItems_event_oneParam_string.Count <= i)
+            {
+                _contextMenu._menuItems_event_oneParam_string.Add(new ItemActionString());
                 serializedObject.Update();
             }
             if(_contextMenu._menuItems_checkBoxCanDisable.Count<=i)
@@ -180,6 +198,15 @@ public class S_Inspector_ContextMenu : Editor
                     }
                     EditorGUILayout.EndVertical();
                 }
+                else if (_contextMenu._menuItems_type[i] == MenuItemType.InputLine)
+                {
+                    EditorGUILayout.BeginVertical();
+                    {
+                        _contextMenu._menuItems_Inputline[i] =EditorGUILayout.TextField("输入框" ,_contextMenu._menuItems_Inputline[i] );
+                        EditorGUILayout.PropertyField(_menuItems_event_oneParam_string_Seri.GetArrayElementAtIndex(i));
+                    }
+                    EditorGUILayout.EndVertical();
+                }
                 if (GUILayout.Button("删除"))
                 {
                     deleteIndex.Add(i);
@@ -197,7 +224,9 @@ public class S_Inspector_ContextMenu : Editor
             _contextMenu._menuItems_checkBox.RemoveAt(deleteIndex[i]);
             _contextMenu._menuItems_checkBoxCanDisable.RemoveAt(deleteIndex[i]);
             _contextMenu._menuItems_dropDown.RemoveAt(deleteIndex[i]);
+            _contextMenu._menuItems_Inputline.RemoveAt(deleteIndex[i]);
             _contextMenu._menuItems_event_oneParam_int.RemoveAt(deleteIndex[i]);
+            _contextMenu._menuItems_event_oneParam_string.RemoveAt(deleteIndex[i]);
             _menuItemOpen.RemoveAt(deleteIndex[i]);
             _menuItemIsUseClickEvent.RemoveAt(deleteIndex[i]);
         }
@@ -254,9 +283,17 @@ public class S_Inspector_ContextMenu : Editor
             _contextMenu._menuItems_dropDown[index] = _contextMenu._menuItems_dropDown[index - factor];  
             _contextMenu._menuItems_dropDown[index - factor] = dropdownTemp;
             //
+            var inputLineTemp = _contextMenu._menuItems_Inputline[index];
+            _contextMenu._menuItems_Inputline[index] = _contextMenu._menuItems_Inputline[index - factor];  
+            _contextMenu._menuItems_Inputline[index - factor] = inputLineTemp;
+            //
             var eventIntTemp = _contextMenu._menuItems_event_oneParam_int[index];
             _contextMenu._menuItems_event_oneParam_int[index] = _contextMenu._menuItems_event_oneParam_int[index - factor];  
             _contextMenu._menuItems_event_oneParam_int[index - factor] = eventIntTemp;
+            //
+            var eventStrTemp = _contextMenu._menuItems_event_oneParam_string[index];
+            _contextMenu._menuItems_event_oneParam_string[index] = _contextMenu._menuItems_event_oneParam_string[index - factor];  
+            _contextMenu._menuItems_event_oneParam_string[index - factor] = eventStrTemp;
             //
             var menuItemOpenTemp =_menuItemOpen[index];
             _menuItemOpen[index] = _menuItemOpen[index- factor];  

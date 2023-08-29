@@ -60,6 +60,7 @@
      <Compile Include="Assets\Live2D\Cubism\Framework\UserData\CubismUserDataTag.cs" />
      <Compile Include="Assets\Live2D\Cubism\Core\Unmanaged\ByteExtensionMethods.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\Json\CubismPhysics3Json.cs" />
+     <Compile Include="Assets\Resources\Script\S_Character.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\Pose\CubismPoseData.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\LookAt\CubismLookParameter.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\Motion\CubismMotionController.cs" />
@@ -195,6 +196,7 @@
      <Compile Include="Assets\Live2D\Cubism\Framework\Json\CubismJsonParser.cs" />
      <Compile Include="Assets\Live2D\Cubism\Core\Unmanaged\CubismUnmanagedMoc.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\HarmonicMotion\CubismHarmonicMotionController.cs" />
+     <Compile Include="Assets\Resources\Script\S_ChatGPT.cs" />
      <Folder Include="Assets" />
      <Folder Include="Assets\Live2D\Cubism\Samples" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
@@ -223,6 +225,7 @@
      <Folder Include="Assets\TextMesh Pro\Resources\Fonts &amp; Materials" />
      <None Include="Assets\mcs.rsp" />
      <Folder Include="Assets\Live2D\Cubism\Plugins\iOS\Release-iphoneos" />
+     <None Include="Assets\Resources\Character\sjiang\Animations\Smile.motion3.json" />
      <Folder Include="Assets\Live2D\Cubism\Plugins\macOS" />
      <Folder Include="Assets\StreamingAssets\Mali_offine_compiler\Plugins\external" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro_Mobile.cginc" />
