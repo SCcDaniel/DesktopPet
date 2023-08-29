@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using Debug = UnityEngine.Debug;
+using System.Threading;
 #if UNITY_STANDALONE_WIN
 using System.Runtime.InteropServices;
 using System.Diagnostics;
@@ -265,12 +266,12 @@ public class S_TransparentWindow : MonoBehaviour
         CreateTray();
         
         //安装全局钩子
-        using (Process curProcess = Process.GetCurrentProcess())
-        using (ProcessModule curModule = curProcess.MainModule)
-        {
-            MouseHookProc = new HookProc(FuncMouseHookProc);
-            _hMouseHook = SetWindowsHookEx(WH_MOUSE_LL,MouseHookProc,GetModuleHandle(curModule.ModuleName),0); 
-        }
+        // using (Process curProcess = Process.GetCurrentProcess())
+        // using (ProcessModule curModule = curProcess.MainModule)
+        // {
+        //     MouseHookProc = new HookProc(FuncMouseHookProc);
+        //     _hMouseHook = SetWindowsHookEx(WH_MOUSE_LL,MouseHookProc,GetModuleHandle(curModule.ModuleName),0); 
+        // }
     }
     
     private IntPtr FuncMouseHookProc(int nCode, IntPtr wParam, IntPtr lParam)
@@ -340,16 +341,62 @@ public class S_TransparentWindow : MonoBehaviour
 
     void Destroy()
     {
-        UnhookWindowsHookEx(_hMouseHook);
+        //UnhookWindowsHookEx(_hMouseHook);
         _hMouseHook = (IntPtr)0;
         SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 2, 2, SWP_SHOWWINDOW);
     }
 
 #endif
 
+    private Thread updateThread;
+    private bool bDestroyUpdateThread = false;
+    
     private void OnDestroy()
     {
+        //bDestroyUpdateThread = true;
+        //updateThread.Join();
         Destroy();
+    }
+
+    private void UpdateThreadFunc()
+    {
+
+    }
+
+    private void Update()
+    {
+        System.Drawing.Point cursorPos = System.Windows.Forms.Cursor.Position;
+#if !UNITY_EDITOR 
+            Vector3 pos = Vector3.zero;
+            pos.x = cursorPos.X;
+            pos.y = Screen.currentResolution.height - cursorPos.Y;
+            pos.z = Input.mousePosition.z;
+            MouseTrack.x = pos.x;
+            MouseTrack.y = pos.y;
+            {
+                if (EventSystem.current)
+                {
+                    var CurrentCursorPos = Camera.main.ScreenToWorldPoint(pos);
+                    PointerEventData eventData = new PointerEventData(EventSystem.current);
+                    //eventData.position = Input.mousePosition;
+                    eventData.position = pos;
+                    // 执行射线检测，查看指定位置是否有UI
+                    List<RaycastResult> results = new List<RaycastResult>();
+                    EventSystem.current.RaycastAll(eventData, results);
+                    UnityEngine.Vector3 target = CurrentCursorPos + Camera.main.transform.forward * 500.0f;
+                    RaycastHit[] ObjResults = Physics.RaycastAll(CurrentCursorPos, target);
+                    if (ObjResults.Length > 0 || results.Count > 0)
+                    { 
+                        SetWindowTransparency(false);
+                    }
+                    else
+                    {
+                        SetWindowTransparency(true);
+                    }
+                }
+            
+            } 
+#endif
     }
 
     void Awake()
@@ -359,6 +406,8 @@ public class S_TransparentWindow : MonoBehaviour
 #if !UNITY_EDITOR
         InitWindowStyle();
 #endif
+        // Thread updateThread = new Thread(UpdateThreadFunc);
+        // updateThread.Start();
     }
     
 }
