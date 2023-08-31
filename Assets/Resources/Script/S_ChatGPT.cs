@@ -1,17 +1,53 @@
 using System;
 using System.Collections;
+using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
+using System.Security.Cryptography;
+using System.Text;
 
 public class S_ChatGPT : MonoBehaviour
 {
-    private static string API_KEY = "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"; // 用您的API密钥替换
-    private static string API_URL = "https://api.openai.com/v1/chat/completions";
+    private static string API_URL = "http://43.163.241.12:5000/chat_gpt";
+    private static string TipWord = "请用中文回答：";
     private bool bFinish = false;
+    private string miyao = "j2hbbwang";
+
     private void Start()
     {
-        //StartCoroutine(SendRequestToChatGpt("Hello, how can I help you?"));
+        string text = TipWord + S_GlobalParameters.prompt;
+        string encryptedText = EncryptStringAES(text, miyao);
+        Debug.Log("明文:   " + text);
+        Debug.Log("加密信息: " + encryptedText);
+        StartCoroutine(SendPromptToServer(encryptedText, (response) =>
+        {
+            Debug.Log("Response from server: " + response);
+            S_DialogBox.DialogBox.Say(response);
+        }));
     }
+   
+    public static string EncryptStringAES(string plainText, string password)
+    {
+        using (var aes = Aes.Create())
+        {
+            var key = new Rfc2898DeriveBytes(password, Encoding.UTF8.GetBytes("12345678"), 1000);
+            aes.Key = key.GetBytes(aes.KeySize / 8);
+            aes.IV = key.GetBytes(aes.BlockSize / 8);
+            aes.Padding = PaddingMode.PKCS7;
+
+            using (var encryptor = aes.CreateEncryptor(aes.Key, aes.IV))
+            using (var ms = new MemoryStream())
+            {
+                using (var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
+                using (var sw = new StreamWriter(cs))
+                {
+                    sw.Write(plainText);
+                }
+                return Convert.ToBase64String(ms.ToArray());
+            }
+        }
+    }
+    
 
     private void Update()
     {
@@ -21,16 +57,6 @@ public class S_ChatGPT : MonoBehaviour
         }
     }
 
-    public static void SetAPIKey(string key)
-    {
-        API_KEY = key;
-    }
-
-    public static string GetAPIKey()
-    {
-        return API_KEY;
-    }
-    
     public static void SetAPIUrl(string url)
     {
         API_URL = url;
@@ -41,41 +67,36 @@ public class S_ChatGPT : MonoBehaviour
         return API_URL;
     }
     
-    public  IEnumerator SendRequestToChatGpt(string prompt)
+    public  IEnumerator SendPromptToServer(string prompt, System.Action<string> callback)
     {
-        string jsonBody = "{\"prompt\":\"" + prompt + "\", \"max_tokens\": 50}";
+        var request = new UnityWebRequest(API_URL, "POST");
+        byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes("{\"prompt\": \"" + prompt + "\"}");
+        request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        request.downloadHandler = new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
 
-        using (UnityWebRequest request = new UnityWebRequest(API_URL, "POST"))
+        yield return request.SendWebRequest();
+
+        if (request.result != UnityWebRequest.Result.Success)
         {
-            // 设置请求头
-            request.SetRequestHeader("Content-Type", "application/json");
-            request.SetRequestHeader("Authorization", "Bearer " + API_KEY);
-
-            // 设置请求体
-            byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonBody);
-            request.uploadHandler = new UploadHandlerRaw(bodyRaw);
-            request.downloadHandler = new DownloadHandlerBuffer();
-
-            // 发送请求
-            yield return request.SendWebRequest();
-
-            // 处理响应
-            if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
-            {
-                string msg = "Error: " + request.error;
-                Debug.LogError(msg);
-                S_DialogBox.DialogBox.Say(msg);
-                bFinish = true;
-            }
-            else
-            {
-                string msg = request.downloadHandler.text;
-                Debug.Log("Received: " + msg);
-                S_DialogBox.DialogBox.Say(msg);
-                bFinish = true;
-                // 在此处处理API响应，例如解析JSON并显示聊天回复
-            }
+            Debug.LogError("Error while sending request: " + request.error);
         }
+        else
+        {
+            string response = request.downloadHandler.text;
+            response = response.Split("Request:")[1];
+            callback(response);
+        }
+    }
+    
+    // 示例：在Unity中调用此函数以发送请求并处理响应
+    public void ExampleUsage()
+    {
+        string prompt = "Once upon a time...";
+        StartCoroutine(SendPromptToServer(prompt, (response) =>
+        {
+            Debug.Log("Response from server: " + response);
+        }));
     }
 }
 

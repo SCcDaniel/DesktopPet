@@ -165,6 +165,7 @@
      <Compile Include="Assets\Live2D\Cubism\Framework\UserData\CubismUserDataTargetType.cs" />
      <Compile Include="Assets\Live2D\Cubism\Samples\AsyncBenchmark\AsyncToggler.cs" />
      <Compile Include="Assets\Live2D\Cubism\Core\CubismLogging.cs" />
+     <Compile Include="Assets\Resources\Script\S_ChatGPT.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\Raycasting\CubismRaycaster.cs" />
      <Compile Include="Assets\Live2D\Cubism\Rendering\CubismSortingModeExtensionMethods.cs" />
      <Compile Include="Assets\Live2D\Cubism\Core\CubismCanvasInformation.cs" />
@@ -196,7 +197,6 @@
      <Compile Include="Assets\Live2D\Cubism\Framework\Json\CubismJsonParser.cs" />
      <Compile Include="Assets\Live2D\Cubism\Core\Unmanaged\CubismUnmanagedMoc.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\HarmonicMotion\CubismHarmonicMotionController.cs" />
-     <Compile Include="Assets\Resources\Script\S_ChatGPT.cs" />
      <Folder Include="Assets" />
      <Folder Include="Assets\Live2D\Cubism\Samples" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

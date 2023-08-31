@@ -5773,11 +5773,10 @@ MonoBehaviour:
   - ShaderType
   - Renderer
   - "\u81EA\u52A8\u6267\u884C(1\u79D2)"
-  - API Key
   - API URL
   - "\u53D1\u9001\u6D88\u606F"
-  _menuItems_type: 01000000010000000000000000000000000000000000000002000000030000000300000002000000040000000400000004000000
-  _menuItems_parentIndex: ffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000010000000100000001000000
+  _menuItems_type: 010000000100000000000000000000000000000000000000020000000300000003000000020000000400000004000000
+  _menuItems_parentIndex: ffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000100000001000000
   _menuItems_event:
   - m_PersistentCalls:
       m_Calls: []
@@ -5863,8 +5862,6 @@ MonoBehaviour:
       m_Calls: []
   - m_PersistentCalls:
       m_Calls: []
-  - m_PersistentCalls:
-      m_Calls: []
   _menuItems_event_oneParam_int:
   - m_PersistentCalls:
       m_Calls: []
@@ -5938,8 +5935,6 @@ MonoBehaviour:
       m_Calls: []
   - m_PersistentCalls:
       m_Calls: []
-  - m_PersistentCalls:
-      m_Calls: []
   _menuItems_event_oneParam_string:
   - m_PersistentCalls:
       m_Calls: []
@@ -5961,20 +5956,6 @@ MonoBehaviour:
       m_Calls: []
   - m_PersistentCalls:
       m_Calls: []
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 519420036}
-        m_TargetAssemblyTypeName: S_GlobalParameters, Assembly-CSharp
-        m_MethodName: SetChatGPTAPIKey
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: aaaaaaaaaaaaaaaaaa
-          m_BoolArgument: 0
-        m_CallState: 2
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 519420036}
@@ -6003,8 +5984,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  _menuItems_checkBox: 00000000000001000000000000
-  _menuItems_checkBoxCanDisable: 01010101010101010101010101
+  _menuItems_checkBox: 000000000000010000000000
+  _menuItems_checkBoxCanDisable: 010101010101010101010101
   _menuItems_dropDown:
   - 
   - 
@@ -6015,7 +5996,6 @@ MonoBehaviour:
   - 
   - Vertex Shader;Pixel Shader
   - OpenGLES;Vulkan_GLSL
-  - 
   - 
   - 
   - 
@@ -6198,8 +6178,7 @@ MonoBehaviour:
   - 
   - 
   - 
-  - your_api_key_here
-  - https://api.openai.com/v1/engines/davinci-codex/completions
+  - http://43.163.241.12:5000/chat_gpt
   - "\u4F60\u597D\u5440\uFF1F"
   FromOpenNewMenuButton: {fileID: 0}
   bPointState: 0

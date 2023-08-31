@@ -15,6 +15,8 @@ public class S_GlobalParameters : MonoBehaviour
     public TMP_InputField HeaderCodeInput;
     //Base
     private float currentTime = 0;
+    //chatgpt
+    public static string prompt = "你好呀";
 
     private void Start()
     {
@@ -53,12 +55,6 @@ public class S_GlobalParameters : MonoBehaviour
         writer.Close();
     }
 
-    public void SetChatGPTAPIKey(string key)
-    {
-        S_ChatGPT.SetAPIKey(key);
-        //Debug.Log("123123123123123:::" + key);
-    }
-
     public void SetChatGPTAPIUrl(string url)
     {
         S_ChatGPT.SetAPIUrl(url);
@@ -67,6 +63,7 @@ public class S_GlobalParameters : MonoBehaviour
     public void SendMsgToChatGPT(string inMsg)
     {
         //GameObject gpt = new GameObject("Chat");
+        prompt = inMsg;
         this.gameObject.AddComponent<S_ChatGPT>();
         // string jsonBody = "{\"prompt\":\"" + inMsg + "\", \"max_tokens\": 50}";
         // using (UnityWebRequest request = new UnityWebRequest(S_ChatGPT.GetAPIUrl(), "POST"))
