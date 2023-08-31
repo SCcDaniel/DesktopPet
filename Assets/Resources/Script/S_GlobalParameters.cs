@@ -8,7 +8,11 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
 using Debug = UnityEngine.Debug;
-
+public struct  ChatContext
+{
+    public string ask;
+    public string gpt;
+}
 public class S_GlobalParameters : MonoBehaviour
 {
     public GameObject HeaderCodeWidget;
@@ -17,7 +21,10 @@ public class S_GlobalParameters : MonoBehaviour
     private float currentTime = 0;
     //chatgpt
     public static string prompt = "你好呀";
+    //上下文保存:
 
+    public static List<ChatContext> promptContext =new List<ChatContext>();
+    
     private void Start()
     {
         HeaderCodeWidget.SetActive(false);
