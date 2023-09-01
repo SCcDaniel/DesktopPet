@@ -117,6 +117,7 @@
      <Compile Include="Assets\Live2D\Cubism\Framework\Json\CubismDisplayInfo3Json.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\Json\CubismBuiltinPickers.cs" />
      <Compile Include="Assets\Resources\Script\S_GlobalParameters.cs" />
+     <Compile Include="Assets\Resources\Script\Widgets\S_ChatGPTBox.cs" />
      <Compile Include="Assets\Resources\Script\S_MaliOffineCompiler.cs" />
      <Compile Include="Assets\Live2D\Cubism\Rendering\ArrayExtensionMethods.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\Motion\CubismMotionState.cs" />
@@ -129,6 +130,7 @@
      <Compile Include="Assets\Live2D\Cubism\Framework\Raycasting\CubismRaycastablePrecision.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\HarmonicMotion\CubismHarmonicMotionDirection.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\Raycasting\CubismRaycaster.cs" />
+     <Compile Include="Assets\Resources\Script\S_RefreshUIContentSize.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\MouthMovement\CubismMouthController.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\Physics\CubismPhysics.cs" />
      <Compile Include="Assets\Live2D\Cubism\Core\ComponentExtensionMethods.cs" />
@@ -170,6 +172,7 @@
      <Compile Include="Assets\Live2D\Cubism\Framework\HarmonicMotion\CubismHarmonicMotionController.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\ComponentExtensionMethods.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\LookAt\CubismLookTargetBehaviour.cs" />
+     <Compile Include="Assets\Resources\Script\S_FollowCharacter.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\CubismAutoEyeBlinkInput.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\CubismEyeBlinkController.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\LookAt\CubismLookController.cs" />

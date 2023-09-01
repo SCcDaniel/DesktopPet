@@ -22,12 +22,14 @@ public class S_GlobalParameters : MonoBehaviour
     //chatgpt
     public static string prompt = "你好呀";
     //上下文保存:
-
     public static List<ChatContext> promptContext =new List<ChatContext>();
     
+    public bool bEnableGptActive = false;
+    public GameObject GptObject;
     private void Start()
     {
         HeaderCodeWidget.SetActive(false);
+        GptObject.SetActive(bEnableGptActive);
     }
 
     private void Update()
@@ -62,11 +64,25 @@ public class S_GlobalParameters : MonoBehaviour
         writer.Close();
     }
 
-    public void SetChatGPTAPIUrl(string url)
+    // public void SetGptAppellation(string url)
+    // {
+    //     S_ChatGPT.SetAPIUrl(url);
+    // }
+
+    public void ActiveChatGpt()
     {
-        S_ChatGPT.SetAPIUrl(url);
+        if (!bEnableGptActive)
+        {
+            bEnableGptActive = true;
+            GptObject.SetActive(bEnableGptActive);
+        }
+        else
+        {
+            bEnableGptActive = false;
+            GptObject.SetActive(bEnableGptActive);
+        }
     }
-    
+
     public void SendMsgToChatGPT(string inMsg)
     {
         //GameObject gpt = new GameObject("Chat");

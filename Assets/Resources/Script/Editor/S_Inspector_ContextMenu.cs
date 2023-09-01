@@ -61,7 +61,7 @@ public class S_Inspector_ContextMenu : Editor
             _contextMenu._menuItems_checkBox.Add(false);
             _contextMenu._menuItems_checkBoxCanDisable.Add(true);
             _contextMenu._menuItems_dropDown.Add("");
-            _contextMenu._menuItems_Inputline.Add("");
+            _contextMenu._menuItems_Inputline.Add(new Inputline());
             _contextMenu._menuItems_event_oneParam_int.Add(new ItemActionInt());
             _contextMenu._menuItems_event_oneParam_string.Add(new ItemActionString());
         }
@@ -125,7 +125,7 @@ public class S_Inspector_ContextMenu : Editor
             }
             if (_contextMenu._menuItems_Inputline.Count <= i)
             {
-                _contextMenu._menuItems_Inputline.Add("");
+                _contextMenu._menuItems_Inputline.Add(new Inputline());
                 serializedObject.Update();
             }
             if (_contextMenu._menuItems_event_oneParam_int.Count <= i)
@@ -202,7 +202,8 @@ public class S_Inspector_ContextMenu : Editor
                 {
                     EditorGUILayout.BeginVertical();
                     {
-                        _contextMenu._menuItems_Inputline[i] =EditorGUILayout.TextField("输入框" ,_contextMenu._menuItems_Inputline[i] );
+                        _contextMenu._menuItems_Inputline[i].name = _contextMenu._menuItems_name[i];
+                        _contextMenu._menuItems_Inputline[i].value =EditorGUILayout.TextField("输入框" ,_contextMenu._menuItems_Inputline[i].value);
                         EditorGUILayout.PropertyField(_menuItems_event_oneParam_string_Seri.GetArrayElementAtIndex(i));
                     }
                     EditorGUILayout.EndVertical();

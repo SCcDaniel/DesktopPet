@@ -151,7 +151,7 @@ MonoBehaviour:
   Prefab_OpenNewMenu: {fileID: 5417639376400010289, guid: 840dc81372947da44b5bdc59462bc6d1, type: 3}
   Prefab_CheckBox: {fileID: 5417639376400010289, guid: 00c9daf9f823a8c4a886362a54ffc42e, type: 3}
   Prefab_DropDown: {fileID: 6307209154100999152, guid: 32e1e97b5fbaf1a419c2efb6e0c59d2b, type: 3}
-  Prefab_InputLine: {fileID: 3707042853050167013, guid: 33ac83b32adacb44a889c919f295bb14, type: 3}
+  Prefab_InputLine: {fileID: 3022889310106736460, guid: 33ac83b32adacb44a889c919f295bb14, type: 3}
   _menuItems_name: []
   _menuItems_type: 
   _menuItems_parentIndex: 
@@ -161,6 +161,5 @@ MonoBehaviour:
   _menuItems_checkBox: 
   _menuItems_checkBoxCanDisable: 
   _menuItems_dropDown: []
-  _menuItems_Inputline: []
   FromOpenNewMenuButton: {fileID: 0}
   bPointState: 1

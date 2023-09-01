@@ -27,6 +27,13 @@ public class  ItemActionString: UnityEvent<string>{ }
 [System.Serializable]
 public class  ItemActionInt: UnityEvent<int>{ }
 
+[System.Serializable]
+public class Inputline 
+{
+    public string name;
+    public string value;
+}
+
 public class S_ContextMenu : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler
 {
     public bool DefaultActive = false;
@@ -76,7 +83,7 @@ public class S_ContextMenu : MonoBehaviour,IPointerEnterHandler,IPointerExitHand
     public List<string> _menuItems_dropDown= new List<string>();
     
     [HideInInspector]
-    public List<string> _menuItems_Inputline= new List<string>();
+    public List<Inputline> _menuItems_Inputline= new List<Inputline>();
     
     public Dictionary<int,GameObject> _menus = new Dictionary<int,GameObject>();
     
@@ -162,9 +169,10 @@ public class S_ContextMenu : MonoBehaviour,IPointerEnterHandler,IPointerExitHand
             //InputLine
             if (_menuItems_type[i] == MenuItemType.InputLine)
             {
-                var inputline = obj.GetComponent<TMP_InputField>();
-                inputline.text = _menuItems_Inputline[i]; 
-                //_menuItems_Inputline
+                var name = obj.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+                var inputline = obj.transform.GetChild(1).GetComponent<TMP_InputField>();
+                name.text = _menuItems_Inputline[i].name; 
+                inputline.text = _menuItems_Inputline[i].value;
                 if (_menuItems_event_oneParam_string[i] != null)
                 {
                     _menuItems_event_oneParam_string[i].Invoke(inputline.text);
