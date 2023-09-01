@@ -104,6 +104,7 @@
      <Compile Include="Assets\Resources\Script\S_TransparentWindow.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\Physics\CubismPhysicsNormalization.cs" />
      <Compile Include="Assets\Resources\Script\S_Timer.cs" />
+     <Compile Include="Assets\Unity.VisualScripting.Generated\VisualScripting.Core\AotStubs.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\CubismParameterExtensionMethods.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\CubismParametersInspector.cs" />
      <Compile Include="Assets\Live2D\Cubism\Rendering\CubismSortingModeExtensionMethods.cs" />
@@ -256,6 +257,7 @@
      <Folder Include="Assets\Live2D\Cubism\Samples\OriginalWorkflow\Expression" />
      <Folder Include="Assets\StreamingAssets\Mali_offine_compiler\Plugins" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface-Mobile.shader" />
+     <None Include="Assets\Unity.VisualScripting.Generated\VisualScripting.Core\link.xml" />
      <None Include="Assets\StreamingAssets\Mali_offine_compiler\Plugins\samples\json_reports\performance-report.json" />
      <Folder Include="Assets\Live2D\Cubism\Plugins\Android\arm64-v8a" />
      <Folder Include="Assets\Live2D\Cubism\Framework\Tasking" />

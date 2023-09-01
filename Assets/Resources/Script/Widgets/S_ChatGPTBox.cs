@@ -51,7 +51,7 @@ public class S_ChatGPTBox : MonoBehaviour
     {
         inputLine.onSubmit.AddListener(Submit);
         inputLine.onValueChanged.AddListener(changeValue);
-        meshTip = transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>();
+        meshTip = GameObject.FindWithTag("GptTip").GetComponent<TextMeshProUGUI>();
     }
 
     // Update is called once per frame
@@ -60,7 +60,7 @@ public class S_ChatGPTBox : MonoBehaviour
         if (S_ChatGPT.bActive)
         {
             inputLine.readOnly = false;
-            meshTip.text = "说点什么吧~";
+            meshTip.text = "说点什么吧~(Ctrl+Enter确认)";
         }
         else
         {
@@ -90,7 +90,10 @@ public class S_ChatGPTBox : MonoBehaviour
                 }
             }
             //
-            if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)) 
+            if ((Input.GetKey(KeyCode.LeftControl) || 
+                 Input.GetKey(KeyCode.RightControl) || 
+                 Input.GetKey(KeyCode.LeftAlt) || 
+                 Input.GetKey(KeyCode.RightAlt))
                 && Input.GetKeyDown(KeyCode.Return))
             {
                 Submit(inputLine.text);

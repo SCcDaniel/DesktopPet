@@ -6,6 +6,7 @@ TagManager:
   tags:
   - MainCharacter
   - MainMenu
+  - GptTip
   layers:
   - Default
   - TransparentFX
