@@ -15,6 +15,7 @@ public class S_ChatGPTBox : MonoBehaviour
     private int historyIndex = 0;
     public int maxHistoryCount = 30;
     private bool bHis = false;
+    private string currentString;
     private TextMeshProUGUI meshTip;
     public void Submit(string s)
     {
@@ -71,8 +72,9 @@ public class S_ChatGPTBox : MonoBehaviour
 
         if (inputLine.isFocused)
         {
-            if (Input.GetKeyDown(KeyCode.UpArrow))
+            if (Input.GetKeyDown(KeyCode.PageUp))
             {
+                currentString = inputLine.text;
                 inputLine.text = histories[historyIndex];
                 if (histories.Count - 1 > historyIndex && histories.Count - 1 < maxHistoryCount)
                 {
@@ -80,13 +82,18 @@ public class S_ChatGPTBox : MonoBehaviour
                     bHis = true;
                 }
             }
-            else if (Input.GetKeyDown(KeyCode.DownArrow))
+            else if (Input.GetKeyDown(KeyCode.PageDown))
             {
+                currentString = inputLine.text;
                 inputLine.text = histories[historyIndex];
                 if (histories.Count > 0)
                 {
                     historyIndex--;
                     bHis = true;
+                }
+                else
+                {
+                    inputLine.text = currentString;
                 }
             }
             //

@@ -339,6 +339,7 @@
      <Folder Include="Assets\StreamingAssets\Mali_offine_compiler\Plugins\samples" />
      <Folder Include="Assets\Live2D\Cubism\Plugins\Experimental\Emscripten\1_38_48" />
      <Folder Include="Assets\StreamingAssets\Mali_offine_compiler\Plugins\ShaderCache" />
+     <None Include="Assets\StreamingAssets\ChatGPTRecords.txt" />
      <Folder Include="Assets\Live2D\Cubism\Framework\Expression" />
      <Folder Include="Assets\Live2D\Cubism\Rendering\Resources\Live2D\Cubism\Shaders" />
      <Folder Include="Assets\Resources\Script\Widgets" />

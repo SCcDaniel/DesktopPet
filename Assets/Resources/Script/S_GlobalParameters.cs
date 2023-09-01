@@ -83,6 +83,11 @@ public class S_GlobalParameters : MonoBehaviour
         }
     }
 
+    public void CleanChatGptContent()
+    {
+        promptContext.Clear();
+    }
+
     public void SendMsgToChatGPT(string inMsg)
     {
         //GameObject gpt = new GameObject("Chat");
