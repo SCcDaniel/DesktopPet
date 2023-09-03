@@ -104,7 +104,6 @@
      <Compile Include="Assets\Resources\Script\S_TransparentWindow.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\Physics\CubismPhysicsNormalization.cs" />
      <Compile Include="Assets\Resources\Script\S_Timer.cs" />
-     <Compile Include="Assets\Unity.VisualScripting.Generated\VisualScripting.Core\AotStubs.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\CubismParameterExtensionMethods.cs" />
      <Compile Include="Assets\Live2D\Cubism\Framework\CubismParametersInspector.cs" />
      <Compile Include="Assets\Live2D\Cubism\Rendering\CubismSortingModeExtensionMethods.cs" />
@@ -257,7 +256,6 @@
      <Folder Include="Assets\Live2D\Cubism\Samples\OriginalWorkflow\Expression" />
      <Folder Include="Assets\StreamingAssets\Mali_offine_compiler\Plugins" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface-Mobile.shader" />
-     <None Include="Assets\Unity.VisualScripting.Generated\VisualScripting.Core\link.xml" />
      <None Include="Assets\StreamingAssets\Mali_offine_compiler\Plugins\samples\json_reports\performance-report.json" />
      <Folder Include="Assets\Live2D\Cubism\Plugins\Android\arm64-v8a" />
      <Folder Include="Assets\Live2D\Cubism\Framework\Tasking" />
@@ -616,6 +614,15 @@
      </Reference>
      <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
      <HintPath>D:\UGit\DesktopPet\Library\PackageCache\com.unity.visualscripting@1.8.0\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
+     </Reference>
+     <Reference Include="Unity.Android.Types">
+     <HintPath>F:\Unity\Unity2022_3_1f1c1\2022.3.1f1c1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Types.dll</HintPath>
+     </Reference>
+     <Reference Include="Unity.Android.Gradle">
+     <HintPath>F:\Unity\Unity2022_3_1f1c1\2022.3.1f1c1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Gradle.dll</HintPath>
+     </Reference>
+     <Reference Include="Unity.Android.GradleProject">
+     <HintPath>F:\Unity\Unity2022_3_1f1c1\2022.3.1f1c1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.GradleProject.dll</HintPath>
      </Reference>
      <Reference Include="mscorlib">
      <HintPath>F:\Unity\Unity2022_3_1f1c1\2022.3.1f1c1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\mscorlib.dll</HintPath>

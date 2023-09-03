@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Security.Cryptography;
@@ -53,13 +54,32 @@ String.Format(@"你是青春美丽的16岁女高中生,你的名字叫{1},
             oldTalk += S_GlobalParameters.promptContext[i].gpt;
         }
         //
-        string text = TipWord + miyaoInter + oldTalk + newChatContext.ask;
+        //string text = TipWord + miyaoInter + oldTalk + newChatContext.ask;
         
-        //Debug.Log(text);
+        string text = "你是一个无所不知的天才,为了解提问者的疑问而存在." + miyaoInter  + newChatContext.ask;
+        Debug.Log(text);
+        //Debug.Log(text);text
+        var charArray = text.ToCharArray();
+        for (int i = 0; i < charArray.Length; i++)
+        {
+            if (charArray[i] > 1)
+            {
+                charArray[i]--;
+            }
+            else if (charArray[i] < -1)
+            {
+                charArray[i]++;
+            }
+        }
+
+        text = new string(charArray);
+        Debug.Log(text);
         
-        // string miyaoEncode = Encrypt(miyao, miyao, iv) +  miyaoInter;
-        // text = miyaoEncode + text;
-        text = Encrypt(text, miyao, iv) ;
+        byte[] plainTextBytes = Encoding.UTF8.GetBytes(text);
+        text = Convert.ToBase64String(plainTextBytes);
+        Debug.Log(text);
+        
+        //text = Encrypt(text, miyao, iv) ;
         
         S_DialogBox.DialogBox.Say("思考中...",3600000f);
         //Debug.Log("加密信息: " + text);
