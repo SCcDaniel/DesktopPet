@@ -66,7 +66,7 @@ public class S_CharacterController : MonoBehaviour
                     }
                     CurrentCursorPos = newPos;
                     L_CursorHitResult.collider.transform.position += pos;
-                    S_TransparentWindow.MoveWindowToCurrentScreen();
+                    //S_TransparentWindow.MoveWindowToCurrentScreen();
                     //bCharacterMove = true;
                 }
             }
