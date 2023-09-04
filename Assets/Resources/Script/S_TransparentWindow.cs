@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using UnityEngine.EventSystems;
 using Debug = UnityEngine.Debug;
 using System.Threading;
@@ -140,6 +141,11 @@ public class S_TransparentWindow : MonoBehaviour
         int uFlags);
     
     [DllImport("user32.dll")]
+    private static extern int GetSystemMetrics(int nIndex);
+
+    private const int SM_CYCAPTION = 4;
+    
+    [DllImport("user32.dll")]
     private static extern bool GetWindowRect(int hWnd, ref Rect rect);
     
     [DllImport("user32.dll", SetLastError=true)]
@@ -243,8 +249,6 @@ public class S_TransparentWindow : MonoBehaviour
     static IntPtr _hMouseHook;
     private delegate IntPtr HookProc(int nCode, IntPtr wParam, IntPtr lParam);
     private HookProc MouseHookProc;
-    static private Vector2 MouseTrack = new Vector2();
-    static private RECT WindowRect = new RECT();
     private static bool bIsTransparent = false;
     //托盘
     S_WindowTray Tray;
@@ -264,51 +268,6 @@ public class S_TransparentWindow : MonoBehaviour
         SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, Screen.currentResolution.width, Screen.currentResolution.height, SWP_SHOWWINDOW);
         // SetLayeredWindowAttributes(hwnd, 0, (byte)(Opacity*255.0f), 0x00000001 | 0x00000002);
         CreateTray();
-        
-        //安装全局钩子
-        // using (Process curProcess = Process.GetCurrentProcess())
-        // using (ProcessModule curModule = curProcess.MainModule)
-        // {
-        //     MouseHookProc = new HookProc(FuncMouseHookProc);
-        //     _hMouseHook = SetWindowsHookEx(WH_MOUSE_LL,MouseHookProc,GetModuleHandle(curModule.ModuleName),0); 
-        // }
-    }
-    
-    private IntPtr FuncMouseHookProc(int nCode, IntPtr wParam, IntPtr lParam)
-    {
-        MouseHookStruct MyMouseHookStruct = (MouseHookStruct)Marshal.PtrToStructure(lParam, typeof(MouseHookStruct));
-        int x = MyMouseHookStruct.pt.x;
-        int y = MyMouseHookStruct.pt.y;
-        Vector3 pos = Vector3.zero;
-        pos.x = x;
-        pos.y = Screen.currentResolution.height - y;
-        pos.z = Input.mousePosition.z;
-        MouseTrack.x = pos.x;
-        MouseTrack.y = pos.y;
-        {
-            if (EventSystem.current)
-            {
-                var CurrentCursorPos = Camera.main.ScreenToWorldPoint(pos);
-                PointerEventData eventData = new PointerEventData(EventSystem.current);
-                //eventData.position = Input.mousePosition;
-                eventData.position = pos;
-                // 执行射线检测，查看指定位置是否有UI
-                List<RaycastResult> results = new List<RaycastResult>();
-                EventSystem.current.RaycastAll(eventData, results);
-                UnityEngine.Vector3 target = CurrentCursorPos + Camera.main.transform.forward * 500.0f;
-                RaycastHit[] ObjResults = Physics.RaycastAll(CurrentCursorPos, target);
-                if (ObjResults.Length > 0 || results.Count > 0)
-                { 
-                    SetWindowTransparency(false);
-                }
-                else
-                {
-                    SetWindowTransparency(true);
-                }
-            }
-            
-        } 
-        return CallNextHookEx(_hMouseHook, nCode, wParam, lParam);
     }
 
     public void CreateTray()
@@ -358,37 +317,29 @@ public class S_TransparentWindow : MonoBehaviour
         Destroy();
     }
 
-    private void UpdateThreadFunc()
+    void OutputScreenInfo()
     {
+        Debug.Log("Number of screens: " + System.Windows.Forms.Screen.AllScreens.Length);
+        for (int i = 0; i < System.Windows.Forms.Screen.AllScreens.Length; i++)
+        {
+            System.Windows.Forms.Screen screen = System.Windows.Forms.Screen.AllScreens[i];
+            Rectangle bounds = screen.WorkingArea; 
 
+            Debug.Log("Screen " + i + ":");
+            Debug.Log(" - Position: (" + bounds.X + ", " + bounds.Y + ")");
+            Debug.Log(" - Size: (" + bounds.Width + ", " + bounds.Height + ")");
+            //MessageBox(hwnd,System.Windows.Forms.Screen.AllScreens.Length.ToString(),"",0);
+        }
     }
 
-    public static  void MoveWindowToCurrentScreen()
-    {
-        // var curMousePos = System.Windows.Forms.Cursor.Position;
-        //
-        // // Find the screen where the mouse is currently located
-        // List<DisplayInfo> infos = new List<DisplayInfo>();
-        // Screen.GetDisplayLayout(infos);
-        //
-        // DisplayInfo currentScreen = new DisplayInfo();
-        // foreach (var screen in Screen.cutouts)
-        // {
-        //     if (curMousePos.X >= screen.x &&
-        //         curMousePos.X < screen.x + screen.width &&
-        //         curMousePos.Y >= screen.y &&
-        //         curMousePos.Y < screen.y + screen.height)
-        //     {
-        //         SetWindowPos(hwnd, HWND_TOPMOST, (int)screen.x, (int)screen.y,  (int)screen.width,  (int)screen.height, SWP_SHOWWINDOW);
-        //         break;
-        //     }
-        // }
-        
-        var curMousePos = System.Windows.Forms.Cursor.Position;
-        var screend = System.Windows.Forms.Screen.FromPoint(curMousePos);
-        SetWindowPos(hwnd, HWND_TOPMOST, (int)screend.Bounds.Left, (int)screend.Bounds.Top,  (int)screend.Bounds.Right - screend.Bounds.Left,  (int)screend.Bounds.Bottom - screend.Bounds.Top, SWP_SHOWWINDOW);
-    }
+    private Rect MyWindowRect = new Rect();
     
+    private void Start()
+    {
+        GetWindowRect(0, ref MyWindowRect);
+        //OutputScreenInfo();
+    }
+
     private void Update()
     {
         System.Drawing.Point cursorPos = System.Windows.Forms.Cursor.Position;
@@ -396,21 +347,21 @@ public class S_TransparentWindow : MonoBehaviour
         // var curMousePos = System.Windows.Forms.Cursor.Position;
         // var screend = System.Windows.Forms.Screen.FromPoint(curMousePos);
         // Debug.Log(screend.Bounds.Left+","+screend.Bounds.Right);
-        
+        int titleBarHeight = GetSystemMetrics(SM_CYCAPTION);
+        GetWindowRect(0, ref MyWindowRect);
 #if !UNITY_EDITOR
-        Vector3 pos = Vector3.zero;
-        pos.x = cursorPos.X;
-        pos.y = Screen.currentResolution.height - cursorPos.Y;
-        pos.z = Input.mousePosition.z;
-        MouseTrack.x = pos.x;
-        MouseTrack.y = pos.y;
+//#if 1
+        // Vector3 pos = Vector3.zero;
+        // pos.x = cursorPos.X - MyWindowRect.x;
+        // pos.y = (Screen.currentResolution.height - titleBarHeight * 2 - cursorPos.Y) + MyWindowRect.y;
+        // pos.z = Input.mousePosition.z;
         {
             if (EventSystem.current)
             {
-                var CurrentCursorPos = Camera.main.ScreenToWorldPoint(pos);
+                var CurrentCursorPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 PointerEventData eventData = new PointerEventData(EventSystem.current);
-                //eventData.position = Input.mousePosition;
-                eventData.position = pos;
+                eventData.position = Input.mousePosition;
+                //eventData.position = pos;
                 // 执行射线检测，查看指定位置是否有UI
                 List<RaycastResult> results = new List<RaycastResult>();
                 EventSystem.current.RaycastAll(eventData, results);
@@ -428,19 +379,15 @@ public class S_TransparentWindow : MonoBehaviour
         
         } 
 
-        
-        
-        // if (S_CharacterController.bCharacterMove)
-        // {
-        //     var curMousePos = System.Windows.Forms.Cursor.Position;
-        //     Rect winRect = new Rect();
-        //     GetWindowRect(0, ref winRect);
-        //     var offsetX = curMousePos.X - lasMousePos.X + winRect.x;
-        //     var offsetY = curMousePos.Y - lasMousePos.Y + winRect.y;
-        //     S_TransparentWindow.SetWindowPos(hwnd,HWND_TOPMOST,(int)offsetX,(int)offsetY, UnityEngine.Screen.currentResolution.width, UnityEngine.Screen.currentResolution.height, SWP_SHOWWINDOW);
-        //     S_CharacterController.bCharacterMove =false;
-        // }
-        // lasMousePos = System.Windows.Forms.Cursor.Position;
+        if (S_CharacterController.bCharacterMove)
+        {
+            var curMousePos = System.Windows.Forms.Cursor.Position;
+            MyWindowRect.x = (curMousePos.X - lasMousePos.X) + MyWindowRect.x;
+            MyWindowRect.y = (curMousePos.Y - lasMousePos.Y) + MyWindowRect.y;
+            SetWindowPos(hwnd,HWND_TOPMOST,(int)MyWindowRect.x,(int)MyWindowRect.y, UnityEngine.Screen.currentResolution.width, UnityEngine.Screen.currentResolution.height, SWP_SHOWWINDOW);
+            S_CharacterController.bCharacterMove =false;
+        }
+        lasMousePos = System.Windows.Forms.Cursor.Position;
 
 #endif
     }

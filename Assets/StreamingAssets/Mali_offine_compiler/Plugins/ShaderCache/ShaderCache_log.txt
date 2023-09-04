@@ -1,3 +1,48 @@
-没有输出..?好像有什么不太对劲，
-可能是参数不对，
-可以把[只显示Spilling]关掉看看详细说明。
+Microsoft Windows [�汾 10.0.19045.3324]
+(c) Microsoft Corporation����������Ȩ����
+
+D:\Unity\DesktopPet>chcp 65001
+Active code page: 65001
+
+D:\Unity\DesktopPet>D:/Unity/DesktopPet/Assets/StreamingAssets/Mali_offine_compiler/Plugins/malioc.exe D:/Unity/DesktopPet/Assets/StreamingAssets/Mali_offine_compiler/Plugins/ShaderCache/ShaderCache.frag
+Mali Offline Compiler v7.5.0 (Build 30e352)
+Copyright 2007-2022 Arm Limited, all rights reserved
+
+Configuration
+=============
+
+Hardware: Mali-G710 r0p0
+Architecture: Valhall
+Driver: r36p0-00rel0
+Shader type: OpenGL ES Fragment
+
+Main shader
+===========
+
+Work registers: 19
+Uniform registers: 4
+Stack spilling: false
+16-bit arithmetic: 0%
+
+                              FMA     CVT     SFU      LS       V       T    Bound
+Total instruction cycles:    0.00    0.04    0.00    0.00    0.12    0.12     V, T
+Shortest path cycles:        0.00    0.01    0.00    0.00    0.12    0.12     V, T
+Longest path cycles:         0.00    0.04    0.00    0.00    0.12    0.12     V, T
+
+FMA = Arith FMA, CVT = Arith CVT, SFU = Arith SFU,
+LS = Load/Store, V = Varying, T = Texture
+
+Shader properties
+=================
+
+Has uniform computation: false
+Has side-effects: false
+Modifies coverage: true
+Uses late ZS test: false
+Uses late ZS update: true
+Reads color buffer: false
+
+Note: This tool shows only the shader-visible property state.
+API configuration may also impact the value of some properties.
+
+D:\Unity\DesktopPet>

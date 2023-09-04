@@ -65,9 +65,9 @@ public class S_CharacterController : MonoBehaviour
                         MainContextMenu.gameObject.SetActive(false);
                     }
                     CurrentCursorPos = newPos;
-                    L_CursorHitResult.collider.transform.position += pos;
+                    //L_CursorHitResult.collider.transform.position += pos;
                     //S_TransparentWindow.MoveWindowToCurrentScreen();
-                    //bCharacterMove = true;
+                    bCharacterMove = true;
                 }
             }
         }

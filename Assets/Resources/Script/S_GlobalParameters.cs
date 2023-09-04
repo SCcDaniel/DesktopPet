@@ -42,6 +42,8 @@ public class S_GlobalParameters : MonoBehaviour
             S_MaliOffineCompiler.ExecuteAsync();
             currentTime = 0.0f;
         }
+        //malioc
+        //S_MaliOffineCompiler.shaderCode = GUIUtility.systemCopyBuffer;
     }
 
     public void HeadCodeSupplement()

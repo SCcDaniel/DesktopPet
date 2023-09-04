@@ -1,2 +1,2 @@
-[System.Serializable]
+System.Windows.Forms.Screen.AllScreens
 

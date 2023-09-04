@@ -24,7 +24,7 @@ public class S_Inspector_ContextMenu : Editor
     private SerializedProperty _menuItems_inputLine_Seri;
     private SerializedProperty _menuItems_event_oneParam_int_Seri;
     private SerializedProperty _menuItems_event_oneParam_string_Seri;
-    private List<bool> _menuItemOpen= new List<bool>();
+    private List<bool> _menuItemOpen= new List<bool>(); 
     private List<bool> _menuItemIsUseClickEvent= new List<bool>();
     private void OnEnable()
     {
@@ -243,7 +243,7 @@ public class S_Inspector_ContextMenu : Editor
         }
     }
 
-    void SortArray(List<int> IndexArray , bool up)
+    void SortArray(List<int> IndexArray , bool up) 
     {
         int factor = 1;
         if (up)

@@ -168,6 +168,8 @@ public class S_DialogBox : MonoBehaviour
 
     public void Say(string msg , float Time = 15000)
     {
+        var time = System.DateTime.Now;
+        msg = time.ToString() + "\n" + msg;
         //Debug.Log("Say.."); 
         GUIText.text = msg;
         bHide = false;
@@ -190,6 +192,8 @@ public class S_DialogBox : MonoBehaviour
         
     public void SayAsync(string msg ,float Time = 15000)
     {
+        var time = System.DateTime.Now;
+        msg = time.ToString() + "\n" + msg;
         //Debug.Log("Say.."); 
         AsyncSayText = msg;
         bUseSayText = true;
