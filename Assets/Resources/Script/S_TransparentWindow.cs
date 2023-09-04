@@ -139,8 +139,8 @@ public class S_TransparentWindow : MonoBehaviour
     private static extern int SetWindowPos(IntPtr hwnd, IntPtr hwndInsertAfter, int x, int y, int cx, int cy,
         int uFlags);
     
-    [DllImport("user32.dll", SetLastError=true)]
-    static extern bool GetWindowRect(IntPtr hwnd, out RECT lpRect);
+    [DllImport("user32.dll")]
+    private static extern bool GetWindowRect(int hWnd, ref Rect rect);
     
     [DllImport("user32.dll", SetLastError=true)]
     static extern bool GetClientRect(IntPtr hWnd,out RECT lpRect);
@@ -183,7 +183,7 @@ public class S_TransparentWindow : MonoBehaviour
 
     public static IntPtr hwnd;
     
-    private IntPtr HWND_TOPMOST = new IntPtr(-1);
+    private static IntPtr HWND_TOPMOST = new IntPtr(-1);
     
     private const int GWL_STYLE = -16;
     private const int GWL_EXSTYLE = -20;
@@ -350,7 +350,7 @@ public class S_TransparentWindow : MonoBehaviour
 
     private Thread updateThread;
     private bool bDestroyUpdateThread = false;
-    
+    private System.Drawing.Point lasMousePos;
     private void OnDestroy()
     {
         //bDestroyUpdateThread = true;
@@ -363,39 +363,85 @@ public class S_TransparentWindow : MonoBehaviour
 
     }
 
+    public static  void MoveWindowToCurrentScreen()
+    {
+        // var curMousePos = System.Windows.Forms.Cursor.Position;
+        //
+        // // Find the screen where the mouse is currently located
+        // List<DisplayInfo> infos = new List<DisplayInfo>();
+        // Screen.GetDisplayLayout(infos);
+        //
+        // DisplayInfo currentScreen = new DisplayInfo();
+        // foreach (var screen in Screen.cutouts)
+        // {
+        //     if (curMousePos.X >= screen.x &&
+        //         curMousePos.X < screen.x + screen.width &&
+        //         curMousePos.Y >= screen.y &&
+        //         curMousePos.Y < screen.y + screen.height)
+        //     {
+        //         SetWindowPos(hwnd, HWND_TOPMOST, (int)screen.x, (int)screen.y,  (int)screen.width,  (int)screen.height, SWP_SHOWWINDOW);
+        //         break;
+        //     }
+        // }
+        
+        var curMousePos = System.Windows.Forms.Cursor.Position;
+        var screend = System.Windows.Forms.Screen.FromPoint(curMousePos);
+        SetWindowPos(hwnd, HWND_TOPMOST, (int)screend.Bounds.Left, (int)screend.Bounds.Top,  (int)screend.Bounds.Right - screend.Bounds.Left,  (int)screend.Bounds.Bottom - screend.Bounds.Top, SWP_SHOWWINDOW);
+    }
+    
     private void Update()
     {
         System.Drawing.Point cursorPos = System.Windows.Forms.Cursor.Position;
-#if !UNITY_EDITOR 
-            Vector3 pos = Vector3.zero;
-            pos.x = cursorPos.X;
-            pos.y = Screen.currentResolution.height - cursorPos.Y;
-            pos.z = Input.mousePosition.z;
-            MouseTrack.x = pos.x;
-            MouseTrack.y = pos.y;
+        
+        // var curMousePos = System.Windows.Forms.Cursor.Position;
+        // var screend = System.Windows.Forms.Screen.FromPoint(curMousePos);
+        // Debug.Log(screend.Bounds.Left+","+screend.Bounds.Right);
+        
+#if !UNITY_EDITOR
+        Vector3 pos = Vector3.zero;
+        pos.x = cursorPos.X;
+        pos.y = Screen.currentResolution.height - cursorPos.Y;
+        pos.z = Input.mousePosition.z;
+        MouseTrack.x = pos.x;
+        MouseTrack.y = pos.y;
+        {
+            if (EventSystem.current)
             {
-                if (EventSystem.current)
-                {
-                    var CurrentCursorPos = Camera.main.ScreenToWorldPoint(pos);
-                    PointerEventData eventData = new PointerEventData(EventSystem.current);
-                    //eventData.position = Input.mousePosition;
-                    eventData.position = pos;
-                    // 执行射线检测，查看指定位置是否有UI
-                    List<RaycastResult> results = new List<RaycastResult>();
-                    EventSystem.current.RaycastAll(eventData, results);
-                    UnityEngine.Vector3 target = CurrentCursorPos + Camera.main.transform.forward * 500.0f;
-                    RaycastHit[] ObjResults = Physics.RaycastAll(CurrentCursorPos, target);
-                    if (ObjResults.Length > 0 || results.Count > 0)
-                    { 
-                        SetWindowTransparency(false);
-                    }
-                    else
-                    {
-                        SetWindowTransparency(true);
-                    }
+                var CurrentCursorPos = Camera.main.ScreenToWorldPoint(pos);
+                PointerEventData eventData = new PointerEventData(EventSystem.current);
+                //eventData.position = Input.mousePosition;
+                eventData.position = pos;
+                // 执行射线检测，查看指定位置是否有UI
+                List<RaycastResult> results = new List<RaycastResult>();
+                EventSystem.current.RaycastAll(eventData, results);
+                UnityEngine.Vector3 target = CurrentCursorPos + Camera.main.transform.forward * 500.0f;
+                RaycastHit[] ObjResults = Physics.RaycastAll(CurrentCursorPos, target);
+                if (ObjResults.Length > 0 || results.Count > 0)
+                { 
+                    SetWindowTransparency(false);
                 }
-            
-            } 
+                else
+                {
+                    SetWindowTransparency(true);
+                }
+            }
+        
+        } 
+
+        
+        
+        // if (S_CharacterController.bCharacterMove)
+        // {
+        //     var curMousePos = System.Windows.Forms.Cursor.Position;
+        //     Rect winRect = new Rect();
+        //     GetWindowRect(0, ref winRect);
+        //     var offsetX = curMousePos.X - lasMousePos.X + winRect.x;
+        //     var offsetY = curMousePos.Y - lasMousePos.Y + winRect.y;
+        //     S_TransparentWindow.SetWindowPos(hwnd,HWND_TOPMOST,(int)offsetX,(int)offsetY, UnityEngine.Screen.currentResolution.width, UnityEngine.Screen.currentResolution.height, SWP_SHOWWINDOW);
+        //     S_CharacterController.bCharacterMove =false;
+        // }
+        // lasMousePos = System.Windows.Forms.Cursor.Position;
+
 #endif
     }
 

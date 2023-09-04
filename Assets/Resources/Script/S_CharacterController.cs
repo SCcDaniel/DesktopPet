@@ -15,6 +15,8 @@ public class S_CharacterController : MonoBehaviour
     private UnityEngine.Vector3 CurrentCursorPos;
     private RaycastHit L_CursorHitResult = new RaycastHit();
     private RaycastHit R_CursorHitResult = new RaycastHit();
+
+    public static bool bCharacterMove;
     // Start is called before the first frame update
     void Start()
     {
@@ -63,8 +65,9 @@ public class S_CharacterController : MonoBehaviour
                         MainContextMenu.gameObject.SetActive(false);
                     }
                     CurrentCursorPos = newPos;
-                    //pos.z = CursorHitResult.collider.transform.position.z;
                     L_CursorHitResult.collider.transform.position += pos;
+                    S_TransparentWindow.MoveWindowToCurrentScreen();
+                    //bCharacterMove = true;
                 }
             }
         }

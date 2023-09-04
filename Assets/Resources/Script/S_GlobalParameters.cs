@@ -21,6 +21,8 @@ public class S_GlobalParameters : MonoBehaviour
     private float currentTime = 0;
     //chatgpt
     public static string prompt = "你好呀";
+
+    public static string model = "gpt-3.5-turbo";
     //上下文保存:
     public static List<ChatContext> promptContext =new List<ChatContext>();
     
@@ -69,17 +71,50 @@ public class S_GlobalParameters : MonoBehaviour
     //     S_ChatGPT.SetAPIUrl(url);
     // }
 
-    public void ActiveChatGpt()
+    public void ActiveChatGpt(int index)
     {
-        if (!bEnableGptActive)
+        switch(index)
         {
-            bEnableGptActive = true;
-            GptObject.SetActive(bEnableGptActive);
+            case 0:
+            {
+                bEnableGptActive = false;
+            }
+            break;
+            case 1:
+            {
+                bEnableGptActive = true;
+                model = "gpt-3.5-turbo";
+            }
+            break;
+            case 2:
+            {
+                bEnableGptActive = true;
+                model = "gpt-4";
+            }
+            break;
+
         }
-        else
+        GptObject.SetActive(bEnableGptActive);
+    }
+
+    public void OpenChatContent()
+    {
+        // Application.streamingAssetsPath + "/ChatGPTRecords.txt"
+        string path = Application.streamingAssetsPath + "/ChatGPTRecords.txt";
+        //File.OpenRead(path);
+        Process process = new Process();
+        process.StartInfo.FileName = path;
+        process.Start();
+        Debug.Log("打开文件:" + path);
+    }
+
+    public void CleanChatGptRecordsCache()
+    {
+        string path = Application.streamingAssetsPath + "/ChatGPTRecords.txt";
+        if (File.Exists(path))
         {
-            bEnableGptActive = false;
-            GptObject.SetActive(bEnableGptActive);
+            File.Delete(path);
+            Debug.Log("删除文件:" + path);
         }
     }
 

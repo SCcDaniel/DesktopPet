@@ -7,7 +7,8 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-[CustomEditor(typeof(S_ContextMenu))]
+[Serializable]
+[CustomEditor(typeof(S_ContextMenu))] 
 [CanEditMultipleObjects]
 public class S_Inspector_ContextMenu : Editor
 {
